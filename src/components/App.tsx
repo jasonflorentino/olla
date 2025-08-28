@@ -1,12 +1,15 @@
 import { ThemeProvider } from "./theme-provider";
 import { AppHeader } from "./AppHeader";
 import { AppMain } from "./AppMain";
+import { ModelProvider } from "@/lib/model-context";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="llmchata-ui-theme">
-      <AppHeader />
-      <AppMain />
+      <ModelProvider>
+        <AppHeader />
+        <AppMain />
+      </ModelProvider>
     </ThemeProvider>
   );
 }
