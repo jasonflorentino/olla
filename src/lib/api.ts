@@ -62,10 +62,12 @@ export type ChatCompletionChunk =
 export async function generateChatCompletion({
   model,
   messages,
+  think,
   onContent,
 }: {
   model: string;
   messages: Message[];
+  think: boolean;
   onContent: (content: ChatCompletionChunk) => void;
 }) {
   try {
@@ -77,6 +79,7 @@ export async function generateChatCompletion({
       body: JSON.stringify({
         model,
         messages,
+        think,
       }),
     });
 

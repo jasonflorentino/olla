@@ -1,5 +1,6 @@
 import { ModeToggle } from "./mode-toggle";
 import { ModelSelect } from "./ModelSelect";
+import { ModelThinkSelect } from "./ModelThinkSwitch";
 
 export function AppHeader() {
   return (
@@ -8,6 +9,7 @@ export function AppHeader() {
         🐱 Chat
       </h1>
       <div className="flex gap-4">
+        <ModelThinkSelect />
         <ModelSelect />
         <ModeToggle />
       </div>
