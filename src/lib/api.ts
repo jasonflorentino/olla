@@ -1,6 +1,9 @@
 import { parseConcatenatedJson } from "./utils/parseConcatenatedJson";
 
-const url_base = "http://localhost:11434/api";
+const url_base = import.meta.env.VITE_API_URL;
+if (!url_base) {
+  throw new Error("Expected url_base to be defined");
+}
 
 export interface Model {
   name: string;
@@ -30,7 +33,7 @@ export async function listLocalModels() {
 }
 
 export interface Message {
-  key?: string | number;
+  key?: string;
   role: "user" | "assistant";
   content: string;
 }
