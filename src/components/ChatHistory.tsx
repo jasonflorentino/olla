@@ -14,19 +14,19 @@ export function ChatHistory() {
             key={m.key}
             className={cn(
               "mb-4 w-7/12 py-2 px-3 border rounded-lg",
-              isUser ? "ml-auto bg-stone-900" : "bg-gray-900",
+              isUser ? "ml-auto bg-secondary" : "bg-primary-foreground",
             )}
           >
             <p
               className={cn(
                 "text-base",
-                isUser ? "text-yellow-300" : "text-green-400",
+                isUser ? "text-chart-3" : "text-chart-2",
               )}
             >
               {isUser ? "you" : "model"}
             </p>
 
-            <p className={cn("text-lg text-gray-200")}>{m.content}</p>
+            <p className={cn("text-lg text-card-foreground")}>{m.content}</p>
           </div>
         );
       })}
