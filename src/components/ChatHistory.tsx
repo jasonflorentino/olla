@@ -1,3 +1,5 @@
+import snarkdown from "snarkdown";
+import { useEffect, useRef } from "react";
 import { useChatContext } from "@/lib/chat-context";
 import { cn } from "@/lib/utils";
 
@@ -13,23 +15,48 @@ export function ChatHistory() {
           <div
             key={m.key}
             className={cn(
-              "mb-4 w-7/12 py-2 px-3 border rounded-lg",
-              isUser ? "ml-auto bg-secondary" : "bg-primary-foreground",
+              "mb-4 w-7/12 py-2 px-3 rounded-lg",
+              isUser ? "ml-auto bg-secondary border" : "bg-background",
             )}
           >
-            <p
+            <h4
               className={cn(
                 "text-base",
                 isUser ? "text-chart-3" : "text-chart-2",
               )}
             >
               {isUser ? "you" : "model"}
-            </p>
+            </h4>
 
-            <p className={cn("text-lg text-card-foreground")}>{m.content}</p>
+            <Content content={m.content} />
           </div>
         );
       })}
     </section>
+  );
+}
+
+function Content({ content }: { content: string }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const html = snarkdown(content);
+      if (contentRef.current) {
+        contentRef.current.innerHTML = html;
+      }
+    }, 500);
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [content]);
+
+  return (
+    <div ref={contentRef} className={cn("text-card-foreground")}>
+      {content}
+    </div>
   );
 }

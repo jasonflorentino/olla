@@ -11,12 +11,16 @@ type ModelContextState = {
   models: Model[];
   model: string;
   setModel: (name: string) => void;
+  think: boolean;
+  setThink: (think: boolean) => void;
 };
 
 const initialState: ModelContextState = {
   models: [],
   model: "",
+  think: true,
   setModel: () => null,
+  setThink: () => null,
 };
 
 const ModelContext = createContext<ModelContextState>(initialState);
@@ -26,6 +30,7 @@ export const useModelContext = () => useContext(ModelContext);
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [models, setModels] = useState<Model[]>([]);
   const [model, setModel] = useState("");
+  const [think, setThink] = useState(true);
 
   useEffect(() => {
     const getModels = async () => {
@@ -43,8 +48,10 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       model,
       models,
       setModel,
+      think,
+      setThink,
     }),
-    [model, models, setModel],
+    [model, models, setModel, think, setThink],
   );
 
   console.log("ModelProvider", value);
