@@ -34,7 +34,7 @@ export async function listLocalModels() {
 
 export interface Message {
   key?: string;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
 }
 
@@ -64,12 +64,18 @@ export async function generateChatCompletion({
   messages,
   think,
   onContent,
+  systemPrompt,
 }: {
   model: string;
   messages: Message[];
   think: boolean;
   onContent: (content: ChatCompletionChunk) => void;
+  systemPrompt: string;
 }) {
+  const prompt = systemPrompt
+    ? { role: "system", content: systemPrompt }
+    : undefined;
+
   try {
     const response = await fetch(url_base + "/chat", {
       method: "POST",
@@ -78,7 +84,7 @@ export async function generateChatCompletion({
       },
       body: JSON.stringify({
         model,
-        messages,
+        messages: prompt ? [prompt, ...messages] : messages,
         think,
       }),
     });
