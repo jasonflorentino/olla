@@ -6,9 +6,11 @@ import { type Message } from "@/lib/api";
 import { useChatContext } from "@/lib/chat-context";
 import { generateChatCompletion, type ChatCompletionChunk } from "@/lib/api";
 import { djb2 } from "@/lib/utils/djb2";
+import { LoaderCircle } from "lucide-react";
 
 export function ChatSubmit() {
-  const { message, messages, setMessages, updateResponse } = useChatContext();
+  const { message, setMessage, messages, setMessages, updateResponse } =
+    useChatContext();
   const { model } = useModelContext();
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +23,7 @@ export function ChatSubmit() {
     ];
 
     setMessages(newMessages);
+    setMessage("");
 
     generateChatCompletion({
       model,
@@ -36,6 +39,12 @@ export function ChatSubmit() {
   };
 
   return (
-    <Button onClick={handleClick}>{loading ? "Loading..." : "Submit"}</Button>
+    <Button
+      className="my-3 w-full md:w-1/2 md:ml-auto block"
+      size="lg"
+      onClick={handleClick}
+    >
+      {loading ? <LoaderCircle className="mx-auto animate-spin" /> : "Submit"}
+    </Button>
   );
 }

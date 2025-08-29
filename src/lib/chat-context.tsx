@@ -32,12 +32,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
-  console.log(messages);
-
   const updateResponse = useCallback(
     (text: string) => {
       setMessages((msgs) => {
-        console.log("msgs", msgs);
         const lastResponse = msgs[msgs.length - 1];
         if (lastResponse.role === "assistant") {
           return [
