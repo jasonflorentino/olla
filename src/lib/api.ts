@@ -30,6 +30,7 @@ export async function listLocalModels() {
 }
 
 export interface Message {
+  key?: string | number;
   role: "user" | "assistant";
   content: string;
 }
