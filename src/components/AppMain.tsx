@@ -8,7 +8,7 @@ export function AppMain() {
     <main className="px-6 py-4">
       <ChatProvider>
         <ChatHistory />
-        <div className="lg:max-w-3/4 lg:mx-auto">
+        <div className="lg:max-w-[800px] lg:mx-auto">
           <ChatInput />
           <ChatSubmit />
         </div>

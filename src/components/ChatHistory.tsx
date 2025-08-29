@@ -7,7 +7,7 @@ export function ChatHistory() {
   const { messages } = useChatContext();
 
   return (
-    <section className="lg:max-w-3/4 mx-auto w-full">
+    <section className="lg:max-w-[800px] mx-auto w-full">
       {messages.map((m) => {
         const isUser = m.role === "user";
 
@@ -15,8 +15,8 @@ export function ChatHistory() {
           <div
             key={m.key}
             className={cn(
-              "mb-4 w-7/12 py-2 px-3 rounded-lg",
-              isUser ? "ml-auto bg-secondary border" : "bg-background",
+              "mb-4 py-2 px-3 rounded-lg",
+              isUser ? "w-7/12 ml-auto bg-secondary border" : "bg-background",
             )}
           >
             <h4

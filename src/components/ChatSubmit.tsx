@@ -11,7 +11,7 @@ import { LoaderCircle } from "lucide-react";
 export function ChatSubmit() {
   const { message, setMessage, messages, setMessages, updateResponse } =
     useChatContext();
-  const { model, think } = useModelContext();
+  const { model, think, prompt } = useModelContext();
   const [loading, setLoading] = useState(false);
 
   const handleClick = () => {
@@ -28,6 +28,7 @@ export function ChatSubmit() {
     generateChatCompletion({
       model,
       think,
+      systemPrompt: prompt,
       messages: newMessages,
       onContent: (c: ChatCompletionChunk) => {
         if (c.done) {
