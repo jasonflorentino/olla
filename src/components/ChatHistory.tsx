@@ -16,7 +16,9 @@ export function ChatHistory() {
             key={m.key}
             className={cn(
               "mb-4 py-2 px-3 rounded-lg",
-              isUser ? "w-7/12 ml-auto bg-secondary border" : "bg-background",
+              isUser
+                ? "w-10/12 sm:w-8/12 md:w-7/12 ml-auto bg-secondary border"
+                : "bg-background",
             )}
           >
             <h4

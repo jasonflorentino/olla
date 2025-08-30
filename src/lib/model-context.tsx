@@ -42,7 +42,7 @@ const PROMPTS = [
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [models, setModels] = useState<Model[]>([]);
   const [model, setModel] = useState("");
-  const [think, setThink] = useState(true);
+  const [think, setThink] = useState(false);
   const [prompt, setPrompt] = useState(PROMPTS[0]);
 
   useEffect(() => {
