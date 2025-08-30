@@ -1,4 +1,4 @@
-# Olla
+# 🐱 Olla
 
 A simple ollama chat client for my home network.
 
