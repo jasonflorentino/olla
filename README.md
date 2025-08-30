@@ -1,8 +1,8 @@
-# LLM Chat
+# Olla
 
-Simple llm chat client for ollama.
+A simple ollama chat client for my home network.
 
-# Setup
+# Repo Setup
 
 You will need
 - ollama: https://github.com/ollama/ollama
@@ -13,18 +13,25 @@ At least Node v22
 node -v # v22.18.0
 ```
 
+Install deps
+```bash
+npm i
+```
+
 Create an `.env` file
 ```bash
 cp .env.example .env
 ```
 
+
 # Developing
 
-- ollama server should be running:
+ollama server should be running:
 ```bash
 ./ollama serve
 ```
-- start the dev server:
+
+Start the dev server:
 ```bash
 npm run dev
 ```
@@ -33,18 +40,22 @@ npm run dev
 
 Note: This is geared towards the intel mac that runs ollama in my local network.
 
+## One time setup
 If it hasn't already been done,
-- Install and run nginx on the machine. I've done this as a `brew` service.
+- Create a local DNS record for the machine.
+  - Set the domain name as the SERVER_NAME value in `.env`
+- Install and run ollama
+  - TODO: Add ollama service setup steps
+- Install and run nginx. I've done this as a `brew` service.
 - Run the `setup.sh` script to configure a reverse proxy server for our app.
 ```bash
 ./etc/setup.sh
 sudo nginx -t
 sudo brew services restart nginx
 ```
-- Install and run ollama
-  - TODO: Add ollama service setup steps
 
-To publish updates,
+## Publish updates
+
 - Copy/pull this repo
 - Build the app
 ```bash
