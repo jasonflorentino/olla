@@ -28,3 +28,11 @@ cp .env.example .env
 ```bash
 npm run dev
 ```
+
+# TODO
+
+check for 'thinking' capabilities
+
+curl http://localhost:11434/api/show -d '{
+  "model": "llava"
+}'
