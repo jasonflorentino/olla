@@ -1,5 +1,11 @@
 import { parseConcatenatedJson } from "./utils/parseConcatenatedJson";
 import { Logger } from "./log";
+import {
+  type Model,
+  type Message,
+  type ChatCompletionChunk,
+  type ModelInformation,
+} from "./types";
 
 const url_base = import.meta.env.DEV
   ? import.meta.env.VITE_API_URL_DEV
@@ -10,24 +16,6 @@ if (!url_base) {
 }
 
 const logger = new Logger("api");
-
-interface ModelDetails {
-  parent_model: string;
-  format: string;
-  family: string;
-  families: string[];
-  parameter_size: string;
-  quantization_level: string;
-}
-
-export interface Model {
-  name: string;
-  model: string;
-  modified_at: string;
-  size: number;
-  digest: string;
-  details: ModelDetails;
-}
 
 export async function listLocalModels() {
   logger.debug("listLocalModels");
@@ -40,35 +28,6 @@ export async function listLocalModels() {
     return [];
   }
 }
-
-export type Role = "user" | "assistant" | "system";
-
-export interface Message {
-  key?: string;
-  role: Role;
-  content: string;
-}
-
-export type ChatCompletionChunk =
-  | {
-      done: false;
-      model: string;
-      created_at: string;
-      message: Message;
-    }
-  | {
-      done: true;
-      model: string;
-      created_at: string;
-      message: Message;
-      done_reason: string | "stop";
-      total_duration: number;
-      load_duration: number;
-      prompt_eval_count: number;
-      prompt_eval_duration: number;
-      eval_count: number;
-      eval_duration: number;
-    };
 
 export async function generateChatCompletion(params: {
   model: string;
@@ -116,39 +75,6 @@ export async function generateChatCompletion(params: {
     logger.error(error);
     return [];
   }
-}
-
-type Capability = "completion" | "thinking" | "vision";
-
-export interface ModelInformation {
-  modelfile: string;
-  parameters: string;
-  template: string;
-  details: ModelDetails;
-  model_info: {
-    "general.architecture": string;
-    "general.file_type": number;
-    "general.parameter_count": number;
-    "general.quantization_version": number;
-    "llama.attention.head_count": number;
-    "llama.attention.head_count_kv": number;
-    "llama.attention.layer_norm_rms_epsilon": number;
-    "llama.block_count": number;
-    "llama.context_length": number;
-    "llama.embedding_length": number;
-    "llama.feed_forward_length": number;
-    "llama.rope.dimension_count": number;
-    "llama.rope.freq_base": number;
-    "llama.vocab_size": number;
-    "tokenizer.ggml.bos_token_id": number;
-    "tokenizer.ggml.eos_token_id": number;
-    "tokenizer.ggml.merges": string[]; // populates if `verbose=true`
-    "tokenizer.ggml.model": string;
-    "tokenizer.ggml.pre": string;
-    "tokenizer.ggml.token_type": string[]; // populates if `verbose=true`
-    "tokenizer.ggml.tokens": string[]; // populates if `verbose=true`
-  };
-  capabilities: Capability[];
 }
 
 export async function showModelInformation(params: {

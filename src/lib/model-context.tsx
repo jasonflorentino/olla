@@ -6,12 +6,8 @@ import React, {
   useState,
   useRef,
 } from "react";
-import {
-  showModelInformation,
-  listLocalModels,
-  type Model,
-  type ModelInformation,
-} from "@/lib/api";
+import { API } from "@/lib";
+import { type Model, type ModelInformation } from "@/lib/types";
 
 type ModelContextState = {
   models: Model[];
@@ -62,7 +58,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const getModels = async () => {
-      const modelList = await listLocalModels();
+      const modelList = await API.listLocalModels();
       if (modelList.length) {
         setModels(modelList);
         setModel(modelList[0].name);
@@ -91,7 +87,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       tries.set(model, curr + 1);
     }
 
-    showModelInformation({
+    API.showModelInformation({
       model_name: model,
     })
       .then((modelInfo) => {
