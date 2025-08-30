@@ -1,6 +1,9 @@
 import { parseConcatenatedJson } from "./utils/parseConcatenatedJson";
 
-const url_base = import.meta.env.VITE_API_URL;
+const url_base = import.meta.env.DEV
+  ? import.meta.env.VITE_API_URL_DEV
+  : import.meta.env.VITE_API_URL_PROD;
+
 if (!url_base) {
   throw new Error("Expected url_base to be defined");
 }
