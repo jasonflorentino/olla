@@ -4,8 +4,14 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useRef,
 } from "react";
-import { listLocalModels, type Model } from "@/lib/api";
+import {
+  showModelInformation,
+  listLocalModels,
+  type Model,
+  type ModelInformation,
+} from "@/lib/api";
 
 type ModelContextState = {
   models: Model[];
@@ -13,20 +19,24 @@ type ModelContextState = {
   setModel: (name: string) => void;
   think: boolean;
   setThink: (think: boolean) => void;
+  canThink: boolean;
   prompt: string;
   prompts: string[];
   setPrompt: (prompt: string) => void;
+  modelInformation: Record<string, ModelInformation>;
 };
 
 const initialState: ModelContextState = {
   models: [],
   model: "",
-  think: true,
   setModel: () => null,
+  think: true,
   setThink: () => null,
+  canThink: false,
   prompt: "",
   prompts: [],
   setPrompt: () => null,
+  modelInformation: {},
 };
 
 const ModelContext = createContext<ModelContextState>(initialState);
@@ -44,6 +54,11 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [model, setModel] = useState("");
   const [think, setThink] = useState(false);
   const [prompt, setPrompt] = useState(PROMPTS[0]);
+  const [modelInformation, setModelInformation] = useState<
+    ModelContextState["modelInformation"]
+  >({});
+
+  const modelInfoTriesRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     const getModels = async () => {
@@ -56,19 +71,66 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
     getModels();
   }, []);
 
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
+    if (modelInformation[model]) {
+      return;
+    }
+
+    const tries = modelInfoTriesRef.current;
+    const curr = tries.get(model);
+
+    if (curr === undefined) {
+      tries.set(model, 1);
+    } else if (curr > 5) {
+      console.warn("retry limit reached");
+      return;
+    } else {
+      tries.set(model, curr + 1);
+    }
+
+    showModelInformation({
+      model_name: model,
+    })
+      .then((modelInfo) => {
+        console.log({ model, modelInfo });
+        if (!modelInfo) {
+          return;
+        }
+        setModelInformation((prev) => {
+          return { ...prev, [model]: modelInfo };
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [model, modelInformation, setModelInformation]);
+
   const value = useMemo(
     () => ({
       model,
       models,
       setModel,
+      modelInformation,
       prompt,
       prompts: PROMPTS,
       setPrompt,
       think,
       setThink,
+      canThink: modelInformation[model]?.capabilities.some(
+        (c) => c === "thinking",
+      ),
     }),
-    [model, models, setModel, prompt, think, setThink],
+    [model, models, modelInformation, setModel, prompt, think, setThink],
   );
+
+  useEffect(() => {
+    if (!value.canThink && think) {
+      setThink(false);
+    }
+  }, [value.canThink, think]);
 
   console.log("ModelProvider", value);
 
