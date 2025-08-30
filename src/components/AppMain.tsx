@@ -2,6 +2,7 @@ import { ChatProvider } from "@/lib/chat-context";
 import { ChatInput } from "./ChatInput";
 import { ChatSubmit } from "./ChatSubmit";
 import { ChatHistory } from "./ChatHistory";
+import { ChatClear } from "./ChatClear";
 
 export function AppMain() {
   return (
@@ -10,7 +11,10 @@ export function AppMain() {
         <ChatHistory />
         <div className="lg:max-w-[800px] lg:mx-auto">
           <ChatInput />
-          <ChatSubmit />
+          <div className="flex gap-3 justify-end">
+            <ChatClear />
+            <ChatSubmit />
+          </div>
         </div>
       </ChatProvider>
     </main>
