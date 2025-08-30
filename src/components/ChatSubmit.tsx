@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { useModelContext } from "@/lib/model-context";
 import { Button } from "./ui/button";
-import { type Message } from "@/lib/api";
+import { type Message, type ChatCompletionChunk } from "@/lib/types";
 import { useChatContext } from "@/lib/chat-context";
-import { generateChatCompletion, type ChatCompletionChunk } from "@/lib/api";
+import { API } from "@/lib";
 import { djb2 } from "@/lib/utils/djb2";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export function ChatSubmit() {
     setMessages(newMessages);
     setMessage("");
 
-    generateChatCompletion({
+    API.generateChatCompletion({
       model,
       think,
       systemPrompt: prompt,
