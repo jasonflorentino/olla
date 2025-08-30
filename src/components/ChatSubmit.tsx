@@ -42,8 +42,9 @@ export function ChatSubmit() {
 
   return (
     <Button
-      className="my-3 w-full md:w-1/2 md:ml-auto block"
+      className="my-3 w-full sm:ml-auto sm:w-1/2 md:w-1/3 block"
       size="lg"
+      disabled={!message}
       onClick={handleClick}
     >
       {loading ? <LoaderCircle className="mx-auto animate-spin" /> : "Submit"}
