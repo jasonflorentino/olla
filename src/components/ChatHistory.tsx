@@ -15,9 +15,9 @@ export function ChatHistory() {
           <div
             key={m.key}
             className={cn(
-              "mb-6 py-2 px-3 rounded-lg",
+              "mb-6 py-2 rounded-lg",
               isUser
-                ? "w-10/12 sm:w-8/12 md:w-7/12 ml-auto bg-secondary border"
+                ? "w-10/12 sm:w-8/12 md:w-7/12 px-3 ml-auto bg-secondary border"
                 : "bg-background",
             )}
           >
