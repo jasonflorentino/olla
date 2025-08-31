@@ -38,7 +38,7 @@ launchctl enable "$DOMAIN/com.ollama.serve" || { echo "enable failed"; exit 1; }
 launchctl kickstart -k "$DOMAIN/com.ollama.serve" || { echo "kickstart failed"; exit 1; }
 echo
 echo Verifying ollama is running
-curl -sf http://localhost:11434/api/tags >/dev/null || { echo "Test req failed"; exit 1; }
+curl -sf --ipv4 http://127.0.0.1:11434/api/tags >/dev/null || { echo "Test req failed"; exit 1; }
 lsof -i :11434 >/dev/null 2>&1 || { echo "Process isnt bound"; exit 1; }
 echo Ok
 echo
