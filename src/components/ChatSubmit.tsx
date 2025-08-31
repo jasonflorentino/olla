@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { toast } from "sonner";
 
 import { useModelContext } from "@/lib/model-context";
 import { Button } from "./ui/button";

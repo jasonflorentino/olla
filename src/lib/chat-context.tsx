@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import type { Message } from "./api";
+import type { Message } from "./types";
 import { djb2 } from "./utils/djb2";
 
 type ChatContextState = {
