@@ -19,7 +19,11 @@ export function SettingsButton() {
   };
 
   return (
-    <Button variant="outline" size="icon" onClick={handleClick}>
+    <Button
+      variant={isSettingsPage ? "default" : "outline"}
+      size="icon"
+      onClick={handleClick}
+    >
       <Settings
         className={cn(
           isSettingsPage ? "rotate-0" : "-rotate-90",
