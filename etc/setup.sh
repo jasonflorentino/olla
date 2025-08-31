@@ -22,6 +22,12 @@ sed "s|\\\$SERVER_NAME|$SERVER_NAME|g" \
     ./etc/com.ollama.serve.plist > "$PLIST"
 sed -i '' "s|\\\$HOME|$HOME|g" "$PLIST"
 echo
+mkdir -p "$HOME/Library/Logs" "$HOME/Library/LaunchAgents"
+chown "$(id -un)":"$(id -gn)" "$HOME/Library/LaunchAgents/com.ollama.serve.plist"
+chmod 644 "$HOME/Library/LaunchAgents/com.ollama.serve.plist"
+touch "$HOME/Library/Logs/ollama-serve.out" "$HOME/Library/Logs/ollama-serve.err"
+chmod 644 "$HOME/Library/Logs/ollama-serve."*
+echo
 echo Loading ollama service
 # Unload only if currently loaded
 if launchctl print "$DOMAIN/com.ollama.serve" >/dev/null 2>&1; then
