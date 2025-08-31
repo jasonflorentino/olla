@@ -2,6 +2,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -48,7 +49,9 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
     [page, setPage, prevPage],
   );
 
-  logger.debug({ page, prevPage });
+  useEffect(() => {
+    logger.debug(value);
+  }, [value]);
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>;
 };
