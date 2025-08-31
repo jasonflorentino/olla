@@ -4,8 +4,7 @@ import { useModelContext } from "@/lib/model-context";
 import { Button } from "./ui/button";
 import { type Message, type ChatCompletionChunk } from "@/lib/types";
 import { useChatContext } from "@/lib/chat-context";
-import { API } from "@/lib";
-import { djb2 } from "@/lib/utils/djb2";
+import { API, Util } from "@/lib";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +19,7 @@ export function ChatSubmit() {
 
     const newMessages: Message[] = [
       ...messages,
-      { role: "user", content: message, key: djb2(message) },
+      { role: "user", content: message, key: Util.djb2(message) },
     ];
 
     setMessages(newMessages);

@@ -7,6 +7,7 @@ export function ChatInput() {
   return (
     <div>
       <Textarea
+        className="min-h-28"
         placeholder="Type your message here."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
