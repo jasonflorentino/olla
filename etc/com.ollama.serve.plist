@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ollama.serve</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/ollama</string>
+    <string>serve</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+
+    <key>OLLAMA_ORIGINS</key>
+    <string>http://$SERVER_NAME,http://$SERVER_NAME:*</string>
+  </dict>
+
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key><false/>
+    <key>NetworkState</key><true/>
+  </dict>
+
+  <key>StandardOutPath</key><string>${HOME}/Library/Logs/ollama-serve.out</string>
+  <key>StandardErrorPath</key><string>${HOME}/Library/Logs/ollama-serve.err</string>
+</dict>
+</plist>
