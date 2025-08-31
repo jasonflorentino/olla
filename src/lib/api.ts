@@ -38,6 +38,7 @@ export async function generateChatCompletion(params: {
   think: boolean;
   onContent: (content: ChatCompletionChunk) => void;
   onError?: (e: unknown) => void;
+  controller: AbortController;
   systemPrompt: string;
 }) {
   logger.debug("generateChatCompletion", params);
@@ -58,6 +59,7 @@ export async function generateChatCompletion(params: {
         messages: prompt ? [prompt, ...messages] : messages,
         think,
       }),
+      signal: params.controller.signal,
     });
 
     if (!response || !response.body) {
@@ -99,10 +101,14 @@ export async function generateChatCompletion(params: {
       }
       reader.releaseLock();
     }
-  } catch (error) {
-    logger.error(error);
-    toast.error(String(error));
-    params.onError?.(error);
+  } catch (err) {
+    logger.error(err);
+    if (err instanceof Error && err.name === "AbortError") {
+      toast("Generation aborted");
+    } else {
+      toast.error(String(err));
+    }
+    params.onError?.(err);
     return [];
   }
 }
