@@ -43,7 +43,10 @@ export interface Message {
   key?: string;
   role: Role;
   content: string;
+  meta?: MessageMeta;
 }
+
+export type MessageMeta = DistributiveOmit<ChatCompletionChunk, "message">;
 
 export type ChatCompletionChunk =
   | {
@@ -96,3 +99,7 @@ export interface ModelInformation {
   };
   capabilities: Capability[];
 }
+
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
+  ? Omit<T, K>
+  : never;

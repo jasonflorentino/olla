@@ -5,15 +5,15 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import type { Message } from "./types";
-import { djb2 } from "./util";
+import type { Message, ChatCompletionChunk } from "./types";
+import { djb2, getMessageMeta } from "./util";
 
 type ChatContextState = {
   message: string;
   setMessage: (message: string) => void;
   messages: Message[];
   setMessages: (messages: Message[]) => void;
-  updateResponse: (text: string) => void;
+  updateResponse: (chunk: ChatCompletionChunk) => void;
 };
 
 const initialState: ChatContextState = {
@@ -33,9 +33,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const updateResponse = useCallback(
-    (text: string) => {
+    (c: ChatCompletionChunk) => {
       setMessages((msgs) => {
+        const text = c.message.content;
         const lastResponse = msgs[msgs.length - 1];
+        const meta = c.done ? getMessageMeta(c) : undefined;
         // keep replacing the assistant's most recent reponse
         if (lastResponse.role === "assistant") {
           return [
@@ -44,12 +46,13 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
               role: "assistant",
               content: lastResponse.content + text,
               key: djb2(lastResponse.content + text),
+              meta,
             },
           ];
         } else {
           return [
             ...msgs,
-            { role: "assistant", content: text, key: djb2(text) },
+            { role: "assistant", content: text, key: djb2(text), meta },
           ];
         }
       });
