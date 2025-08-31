@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import { useModelContext } from "@/lib/model-context";
 import { Button } from "./ui/button";
@@ -13,9 +13,12 @@ export function ChatSubmit() {
     useChatContext();
   const { model, think, prompt } = useModelContext();
   const [loading, setLoading] = useState(false);
+  const abortControllerRef = useRef<AbortController>(null);
 
   const handleClick = () => {
     setLoading(true);
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     const newMessages: Message[] = [
       ...messages,
@@ -28,22 +31,31 @@ export function ChatSubmit() {
     API.generateChatCompletion({
       model,
       think,
+      controller,
       systemPrompt: prompt,
       messages: newMessages,
       onContent: (c: ChatCompletionChunk) => {
         if (c.done) {
           setLoading(false);
+          abortControllerRef.current = null;
         } else {
           updateResponse(c.message.content);
         }
       },
       onError: () => {
         setLoading(false);
+        abortControllerRef.current = null;
       },
     });
   };
 
-  const disabled = !message;
+  const handleStop = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+  };
+
+  const disabled = !message && !loading;
 
   return (
     <Button
@@ -53,9 +65,12 @@ export function ChatSubmit() {
       )}
       size="lg"
       disabled={disabled}
-      onClick={handleClick}
+      onClick={loading ? handleStop : handleClick}
     >
-      {loading ? <LoaderCircle className="mx-auto animate-spin" /> : "Submit"}
+      <div className="flex justify-center items-center gap-1">
+        {loading ? <LoaderCircle className="animate-spin" /> : "Submit"}
+        {loading ? "Stop" : ""}
+      </div>
     </Button>
   );
 }
