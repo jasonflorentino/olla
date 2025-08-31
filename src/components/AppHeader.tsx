@@ -1,6 +1,7 @@
-import { ModeToggle } from "./mode-toggle";
+import { ThemeToggle } from "./ThemeToggle";
 import { ModelSelect } from "./ModelSelect";
 import { ModelThinkSelect } from "./ModelThinkSwitch";
+import { SettingsButton } from "./SettingsButton";
 
 export function AppHeader() {
   return (
@@ -8,10 +9,11 @@ export function AppHeader() {
       <h1 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         🐱 Chat
       </h1>
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         <ModelThinkSelect />
         <ModelSelect />
-        <ModeToggle />
+        <ThemeToggle />
+        <SettingsButton />
       </div>
     </header>
   );

@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import type { Message } from "./types";
-import { djb2 } from "./utils/djb2";
+import { djb2 } from "./util";
 
 type ChatContextState = {
   message: string;

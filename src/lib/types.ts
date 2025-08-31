@@ -1,3 +1,10 @@
+export const Page = {
+  Home: "home",
+  Settings: "settings",
+} as const;
+
+export type Page = (typeof Page)[keyof typeof Page];
+
 export const Role = {
   User: "user",
   Assistant: "assistant",
