@@ -1,6 +1,10 @@
 # 🐱 Olla
 
-A simple ollama chat client for my home network.
+*A simple ollama chat client for my home network.*
+
+Looked at a few linked on their README, but obviously it's much more fun making your own. Finally gave in and used shadcn.
+
+—Jason (Aug 2025)
 
 # Setup
 
