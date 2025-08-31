@@ -22,6 +22,7 @@ export function ChatSubmit() {
 
     const newMessages: Message[] = [
       ...messages,
+      //TODO: handle keying messages that are exactly the same content.
       { role: "user", content: message, key: Util.djb2(message) },
     ];
 
@@ -38,9 +39,8 @@ export function ChatSubmit() {
         if (c.done) {
           setLoading(false);
           abortControllerRef.current = null;
-        } else {
-          updateResponse(c.message.content);
         }
+        updateResponse(c);
       },
       onError: () => {
         setLoading(false);
