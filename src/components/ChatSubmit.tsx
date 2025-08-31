@@ -59,11 +59,8 @@ export function ChatSubmit() {
 
   return (
     <Button
-      className={cn(
-        disabled && "cursor-not-allowed",
-        "my-3 w-1/2 md:w-1/3 block",
-      )}
-      size="lg"
+      className={cn(disabled && "cursor-not-allowed", "block")}
+      size="default"
       disabled={disabled}
       onClick={loading ? handleStop : handleClick}
     >

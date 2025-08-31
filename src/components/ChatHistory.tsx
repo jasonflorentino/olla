@@ -1,4 +1,4 @@
-import snarkdown from "snarkdown";
+import { marked } from "marked";
 import { useEffect, useRef } from "react";
 import { useChatContext } from "@/lib/chat-context";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ export function ChatHistory() {
           <div
             key={m.key}
             className={cn(
-              "mb-4 py-2 px-3 rounded-lg",
+              "mb-6 py-2 px-3 rounded-lg",
               isUser
                 ? "w-10/12 sm:w-8/12 md:w-7/12 ml-auto bg-secondary border"
                 : "bg-background",
@@ -43,8 +43,8 @@ function Content({ content }: { content: string }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const html = snarkdown(content);
-      if (contentRef.current) {
+      const html = marked.parse(content);
+      if (contentRef.current && typeof html === "string") {
         contentRef.current.innerHTML = html;
       }
     }, 500);
@@ -57,7 +57,10 @@ function Content({ content }: { content: string }) {
   }, [content]);
 
   return (
-    <div ref={contentRef} className={cn("text-card-foreground")}>
+    <div
+      ref={contentRef}
+      className={cn("Content", "leading-7 text-card-foreground")}
+    >
       {content}
     </div>
   );

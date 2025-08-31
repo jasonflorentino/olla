@@ -1,17 +1,19 @@
+import React from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useChatContext } from "@/lib/chat-context";
 
-export function ChatInput() {
+export function ChatInput({ children }: { children: React.ReactNode }) {
   const { message, setMessage } = useChatContext();
 
   return (
-    <div>
+    <div className="relative">
       <Textarea
-        className="min-h-28"
+        className="min-h-32"
         placeholder="Type your message here."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
+      {children}
     </div>
   );
 }

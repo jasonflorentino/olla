@@ -18,11 +18,12 @@ export function AppMain() {
         <>
           <ChatHistory />
           <div className="lg:max-w-[800px] lg:mx-auto">
-            <ChatInput />
-            <div className="flex gap-3 justify-end">
-              <ChatClear />
-              <ChatSubmit />
-            </div>
+            <ChatInput>
+              <div className="flex gap-3 justify-end absolute bottom-4 right-4">
+                <ChatClear />
+                <ChatSubmit />
+              </div>
+            </ChatInput>
           </div>
         </>
       )}
