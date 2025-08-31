@@ -36,6 +36,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     (text: string) => {
       setMessages((msgs) => {
         const lastResponse = msgs[msgs.length - 1];
+        // keep replacing the assistant's most recent reponse
         if (lastResponse.role === "assistant") {
           return [
             ...msgs.slice(0, msgs.length - 1),

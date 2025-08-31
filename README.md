@@ -2,7 +2,7 @@
 
 A simple ollama chat client for my home network.
 
-# Repo Setup
+# Setup
 
 You will need
 - ollama: https://github.com/ollama/ollama
@@ -38,19 +38,24 @@ npm run dev
 
 # Deploying
 
-Note: This is geared towards the intel mac that runs ollama in my local network.
+> [!Note]
+> This is geared towards the intel mac that runs ollama in my local network.
 
 ## One time setup
-If it hasn't already been done,
+
 - Create a local DNS record for the machine.
-  - Set the domain name as the SERVER_NAME value in `.env`
-- Install and run ollama
-  - TODO: Add ollama service setup steps
-- Install and run nginx. I've done this as a `brew` service.
-- Run the `setup.sh` script to configure a reverse proxy server for our app.
+  - Set the domain name you use as the SERVER_NAME value in `.env`.
+- Install ollama.
+  - This setup expects it be at `/usr/local/bin/ollama`
+- Install and run nginx.
+  - I've done this as a `brew` service.
+- Run the `setup.sh` script to setup `ollama` as a launchd service and configure nginx as a reverse proxy server for our app.
 ```bash
 ./etc/setup.sh
-sudo nginx -t
+```
+- Restart nginx to pick up the new server conf.
+```bash
+sudo nginx -t # Make sure our conf is good
 sudo brew services restart nginx
 ```
 
@@ -66,10 +71,4 @@ npm run build
 npm run deploy
 ```
 
-# TODO
-
-check for 'thinking' capabilities
-
-curl http://localhost:11434/api/show -d '{
-  "model": "llava"
-}'
+You should now be able to see the app when you navigate to `http://$SERVER_NAME` while on your local network.
