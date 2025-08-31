@@ -7,6 +7,7 @@ import {
   type Message,
   type ChatCompletionChunk,
   type ModelInformation,
+  Role,
 } from "./types";
 
 const url_base = import.meta.env.DEV
@@ -44,9 +45,17 @@ export async function generateChatCompletion(params: {
   logger.debug("generateChatCompletion", params);
   const { model, messages, think, onContent, systemPrompt } = params;
 
-  const prompt = systemPrompt
-    ? { role: "system", content: systemPrompt }
-    : undefined;
+  const hasSystemPrompt = messages.some((m) => m.role === Role.System);
+
+  const prompt =
+    systemPrompt && !hasSystemPrompt
+      ? {
+          role: Role.System,
+          content:
+            systemPrompt +
+            " When you want a markdown list, use `- ` instead of `* `.",
+        }
+      : undefined;
 
   try {
     const response = await fetch(url_base + "/chat", {

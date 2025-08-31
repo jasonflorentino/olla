@@ -10,16 +10,13 @@ export function ChatClear() {
   const disabled = messages.length === 0;
   return (
     <Button
-      className={cn(
-        disabled && "cursor-not-allowed",
-        "my-3 w-1/2 md:w-1/3 block",
-      )}
+      className={cn(disabled && "sr-only cursor-not-allowed", "block")}
       variant={"secondary"}
-      size="lg"
+      size="default"
       disabled={disabled}
       onClick={handleClick}
     >
-      {"Clear Chat"}
+      {"New Chat"}
     </Button>
   );
 }
