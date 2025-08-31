@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { useModelContext } from "@/lib/model-context";
 import { Button } from "./ui/button";
@@ -37,6 +38,9 @@ export function ChatSubmit() {
         } else {
           updateResponse(c.message.content);
         }
+      },
+      onError: () => {
+        setLoading(false);
       },
     });
   };
