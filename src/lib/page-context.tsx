@@ -7,18 +7,18 @@ import React, {
   useState,
 } from "react";
 
-import { type Page } from "./types";
+import { Page } from "./types";
 import { Logger } from "./log";
 
 const logger = new Logger("PageContext");
 
-type ChatContextState = {
+type PageContextState = {
   page: Page;
   prevPage: Page;
   setPage: (page: Page) => void;
 };
 
-const initialState: ChatContextState = {
+const initialState: PageContextState = {
   page: "home",
   prevPage: "home",
   setPage: () => null,
@@ -29,8 +29,8 @@ const PageContext = createContext<PageContextState>(initialState);
 export const usePageContext = () => useContext(PageContext);
 
 export const PageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [page, _setPage] = useState("home");
-  const [prevPage, setPrevPage] = useState("home");
+  const [page, _setPage] = useState<Page>(Page.Home);
+  const [prevPage, setPrevPage] = useState<Page>(Page.Home);
 
   const setPage = useCallback(
     (nextPage: Page) => {
