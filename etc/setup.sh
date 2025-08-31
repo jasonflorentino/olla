@@ -18,7 +18,7 @@ echo
 echo Got server name: $SERVER_NAME
 echo
 echo Making ollama service file
-sed "s|\\\$SERVER_NAME|$SERVER_NAME|g" \
+sed "s|\\\$SERVER_NAME|$SERVER_NAME|g" | sed "s|\\\$HOME|$HOME|g" \
     ./etc/com.ollama.serve.plist > "$PLIST"
 echo
 echo Loading ollama service
