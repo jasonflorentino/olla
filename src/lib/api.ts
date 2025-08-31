@@ -64,16 +64,40 @@ export async function generateChatCompletion(params: {
       throw new Error("No response");
     }
 
-    const decoder = new TextDecoder();
-    const body = response.body as unknown as AsyncIterable<Uint8Array>;
+    if (!("getReader" in response.body)) {
+      throw new Error("Streaming not supported by this browser");
+    }
 
-    for await (const chunk of body) {
-      const decoded = decoder.decode(chunk);
-      if (!decoded) {
-        continue;
-      }
-      const chunks = parseConcatenatedJson<ChatCompletionChunk>(decoded);
+    const onText = (text: string) => {
+      const chunks = parseConcatenatedJson<ChatCompletionChunk>(text);
       chunks.forEach(onContent);
+    };
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    try {
+      while (!done) {
+        const { value, done: d } = await reader.read();
+        done = d;
+        if (!value) {
+          continue;
+        }
+        const chunkText = decoder.decode(value, {
+          stream: true,
+        });
+        if (!chunkText) {
+          continue;
+        }
+        onText(chunkText);
+      }
+    } finally {
+      const tail = decoder.decode();
+      if (tail) {
+        onText(tail);
+      }
+      reader.releaseLock();
     }
   } catch (error) {
     logger.error(error);
