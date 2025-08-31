@@ -15,15 +15,20 @@ echo Got server name: $SERVER_NAME
 echo
 echo Making ollama service file
 sed "s|\\\$SERVER_NAME|$SERVER_NAME|g" \
-    ./etc/com.ollama.serve.plist > "~/Library/LaunchAgents/com.ollama.serve.plist"
+    ./etc/com.ollama.serve.plist > ~/Library/LaunchAgents/com.ollama.serve.plist
 echo
 echo Loading ollama service
-launchctl unload ~/Library/LaunchAgents/com.ollama.serve.plist 2>/dev/null || true
-launchctl load -w ~/Library/LaunchAgents/com.ollama.serve.plist
+# Unload only if currently loaded
+if launchctl print "gui/$(id -u)/com.ollama.serve" >/dev/null 2>&1; then
+  launchctl bootout "gui/$(id -u)" com.ollama.serve || { echo "bootout failed"; exit 1; }
+fi
+launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ollama.serve.plist" || { echo "bootstrap failed"; exit 1; }
+launchctl enable "gui/$(id -u)/com.ollama.serve" || { echo "enable failed"; exit 1; }
+launchctl kickstart -k "gui/$(id -u)/com.ollama.serve" || { echo "kickstart failed"; exit 1; }
 echo
 echo Verifying ollama is running
-lsof -i :11434 >/dev/null 2>&1 || { echo "Process isnt bound"; exit 1; }
 curl -sf http://localhost:11434/api/tags >/dev/null || { echo "Test req failed"; exit 1; }
+lsof -i :11434 >/dev/null 2>&1 || { echo "Process isnt bound"; exit 1; }
 echo Ok
 echo
 echo Making server conf
