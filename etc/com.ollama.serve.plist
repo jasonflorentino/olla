@@ -28,7 +28,7 @@
     <key>NetworkState</key><true/>
   </dict>
 
-  <key>StandardOutPath</key><string>${HOME}/Library/Logs/ollama-serve.out</string>
-  <key>StandardErrorPath</key><string>${HOME}/Library/Logs/ollama-serve.err</string>
+  <key>StandardOutPath</key><string>$HOME/Library/Logs/ollama-serve.out</string>
+  <key>StandardErrorPath</key><string>$HOME/Library/Logs/ollama-serve.err</string>
 </dict>
 </plist>
