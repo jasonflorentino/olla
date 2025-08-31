@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import { API } from "@/lib";
 import { type Model, type ModelInformation } from "@/lib/types";
+import { toast } from "sonner";
+import { Logger } from "./log";
 
 type ModelContextState = {
   models: Model[];
@@ -21,6 +23,8 @@ type ModelContextState = {
   setPrompt: (prompt: string) => void;
   modelInformation: Record<string, ModelInformation>;
 };
+
+const logger = new Logger("ModelContext");
 
 const initialState: ModelContextState = {
   models: [],
@@ -81,6 +85,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
     if (curr === undefined) {
       tries.set(model, 1);
     } else if (curr > 5) {
+      toast.warning("Couldn't get model information");
       console.warn("retry limit reached");
       return;
     } else {
@@ -89,19 +94,14 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
 
     API.showModelInformation({
       model_name: model,
-    })
-      .then((modelInfo) => {
-        console.log({ model, modelInfo });
-        if (!modelInfo) {
-          return;
-        }
-        setModelInformation((prev) => {
-          return { ...prev, [model]: modelInfo };
-        });
-      })
-      .catch((error) => {
-        console.error(error);
+    }).then((modelInfo) => {
+      if (!modelInfo) {
+        return;
+      }
+      setModelInformation((prev) => {
+        return { ...prev, [model]: modelInfo };
       });
+    });
   }, [model, modelInformation, setModelInformation]);
 
   const value = useMemo(
@@ -128,7 +128,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [value.canThink, think]);
 
-  console.log("ModelProvider", value);
+  logger.debug(value);
 
   return (
     <ModelContext.Provider value={value}>{children}</ModelContext.Provider>

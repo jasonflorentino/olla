@@ -1,4 +1,6 @@
 import { parseConcatenatedJson } from "./utils/parseConcatenatedJson";
+import { toast } from "sonner";
+
 import { Logger } from "./log";
 import {
   type Model,
@@ -25,6 +27,7 @@ export async function listLocalModels() {
     return data.models;
   } catch (error) {
     logger.error(error);
+    toast.error(String(error));
     return [];
   }
 }
@@ -34,6 +37,7 @@ export async function generateChatCompletion(params: {
   messages: Message[];
   think: boolean;
   onContent: (content: ChatCompletionChunk) => void;
+  onError?: (e: unknown) => void;
   systemPrompt: string;
 }) {
   logger.debug("generateChatCompletion", params);
@@ -73,6 +77,8 @@ export async function generateChatCompletion(params: {
     }
   } catch (error) {
     logger.error(error);
+    toast.error(String(error));
+    params.onError?.(error);
     return [];
   }
 }
@@ -95,6 +101,7 @@ export async function showModelInformation(params: {
     return data;
   } catch (error) {
     logger.error(error);
+    toast.error(String(error));
     return undefined;
   }
 }
