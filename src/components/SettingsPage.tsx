@@ -13,7 +13,7 @@ export function SettingsPage() {
       <Text.H2>Settings</Text.H2>
 
       <section className="mt-7">
-        <Text.H4>Model</Text.H4>
+        <Text.H3>Model</Text.H3>
         <Text.Muted>
           Which model to use, and whether to use Thinking before responding.
         </Text.Muted>
@@ -24,7 +24,7 @@ export function SettingsPage() {
       </section>
 
       <section className="mt-7">
-        <Text.H4>System Prompt</Text.H4>
+        <Text.H3>System Prompt</Text.H3>
         <Text.Muted>
           A guiding instruction that gets inserted before your first message.
           This shapes behavior, tone, and constraints of the model's responses.

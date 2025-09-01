@@ -1,5 +1,19 @@
 import React from "react";
 
+export function H1({
+  children,
+  ...props
+}: React.PropsWithChildren<React.JSX.IntrinsicElements["h1"]>) {
+  return (
+    <h1
+      className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance"
+      {...props}
+    >
+      {children}
+    </h1>
+  );
+}
+
 export function H2({
   children,
   ...props
