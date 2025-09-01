@@ -1,6 +1,8 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "./ui/label";
 import { Text } from "./ui";
+import { ModelSelect } from "./ModelSelect";
+import { ModelThinkSelect } from "./ModelThinkSwitch";
 import { useModelContext } from "@/lib/model-context";
 
 export function SettingsPage() {
@@ -10,7 +12,18 @@ export function SettingsPage() {
     <>
       <Text.H2>Settings</Text.H2>
 
-      <section className="mt-4">
+      <section className="mt-7">
+        <Text.H4>Model</Text.H4>
+        <Text.Muted>
+          Which model to use, and whether to use Thinking before responding.
+        </Text.Muted>
+        <div className="flex gap-4 mt-4">
+          <ModelSelect />
+          <ModelThinkSelect />
+        </div>
+      </section>
+
+      <section className="mt-7">
         <Text.H4>System Prompt</Text.H4>
         <Text.Muted>
           This text gets inserted before your first message.
