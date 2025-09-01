@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useModelContext } from "@/lib/model-context";
-import { toModelDisplayName } from "@/lib/utils";
+import { Util } from "@/lib";
 
 export function ModelSelect() {
   const { models, model, setModel } = useModelContext();
@@ -27,7 +27,7 @@ export function ModelSelect() {
           <SelectLabel>Models</SelectLabel>
           {models.map((m) => (
             <SelectItem key={m.name} value={m.name}>
-              {toModelDisplayName(m.name)} ({m.details.parameter_size})
+              {Util.toModelDisplayName(m.name)} ({m.details.parameter_size})
             </SelectItem>
           ))}
         </SelectGroup>
