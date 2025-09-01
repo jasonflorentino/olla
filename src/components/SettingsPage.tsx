@@ -26,7 +26,8 @@ export function SettingsPage() {
       <section className="mt-7">
         <Text.H4>System Prompt</Text.H4>
         <Text.Muted>
-          This text gets inserted before your first message.
+          A guiding instruction that gets inserted before your first message.
+          This shapes behavior, tone, and constraints of the model's responses.
         </Text.Muted>
 
         <RadioGroup
