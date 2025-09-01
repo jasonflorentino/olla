@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 import { useModelContext } from "@/lib/model-context";
 import { Button } from "./ui/button";
@@ -15,7 +15,9 @@ export function ChatSubmit() {
   const [loading, setLoading] = useState(false);
   const abortControllerRef = useRef<AbortController>(null);
 
-  const handleClick = () => {
+  const disabled = !message && !loading;
+
+  const handleClick = useCallback(() => {
     setLoading(true);
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -47,15 +49,39 @@ export function ChatSubmit() {
         abortControllerRef.current = null;
       },
     });
-  };
+  }, [
+    message,
+    messages,
+    model,
+    prompt,
+    setMessage,
+    setMessages,
+    think,
+    updateResponse,
+  ]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (disabled) {
+        return;
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        handleClick();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleClick, disabled]);
 
   const handleStop = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
   };
-
-  const disabled = !message && !loading;
 
   return (
     <Button
