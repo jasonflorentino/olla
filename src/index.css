@@ -16,6 +16,10 @@ ol {
     @apply mt-5 ml-4 list-decimal leading-7;
 }
 
+think {
+    @apply text-muted-foreground;
+}
+
 .Content p {
     @apply leading-7 [&:not(:first-child)]:mt-5;
 }
