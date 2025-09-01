@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 import { Logger } from "./log";
-import { parseConcatenatedJson } from "./util";
+import * as Util from "./util";
 import {
   type Model,
   type Message,
@@ -25,7 +25,7 @@ export async function listLocalModels() {
   try {
     const response = await fetch(url_base + "/tags");
     const data = (await response.json()) as { models: Model[] };
-    return data.models;
+    return Util.sortModels(data.models);
   } catch (error) {
     logger.error(error);
     toast.error(String(error));
@@ -78,7 +78,7 @@ export async function generateChatCompletion(params: {
     }
 
     const onText = (text: string) => {
-      const chunks = parseConcatenatedJson<ChatCompletionChunk>(text);
+      const chunks = Util.parseConcatenatedJson<ChatCompletionChunk>(text);
       chunks.forEach(onContent);
     };
 
