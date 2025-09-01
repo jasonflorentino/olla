@@ -51,9 +51,7 @@ export async function generateChatCompletion(params: {
     systemPrompt && !hasSystemPrompt
       ? {
           role: Role.System,
-          content:
-            systemPrompt +
-            " When you want a markdown list, use `- ` instead of `* `.",
+          content: systemPrompt,
         }
       : undefined;
 

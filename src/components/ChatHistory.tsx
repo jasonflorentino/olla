@@ -2,6 +2,8 @@ import { marked } from "marked";
 import { useEffect, useRef } from "react";
 import { useChatContext } from "@/lib/chat-context";
 import { cn } from "@/lib/utils";
+import { Role } from "@/lib/types";
+import { Util } from "@/lib";
 
 export function ChatHistory() {
   const { messages } = useChatContext();
@@ -9,7 +11,7 @@ export function ChatHistory() {
   return (
     <section className="lg:max-w-[800px] mx-auto w-full">
       {messages.map((m) => {
-        const isUser = m.role === "user";
+        const isUser = m.role === Role.User;
 
         return (
           <div
@@ -27,7 +29,9 @@ export function ChatHistory() {
                 isUser ? "text-chart-3" : "text-chart-2",
               )}
             >
-              {isUser ? "you" : "model"}
+              {isUser
+                ? "you"
+                : Util.toModelDisplayName(m.meta?.model) || "model"}
             </h4>
 
             <Content content={m.content} />
