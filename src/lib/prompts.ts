@@ -59,5 +59,5 @@ export const PROMPTS = {
 };
 
 function clean(s: string): string {
-  return s.replace(/\s+/, " ");
+  return s.trim().replace(/\s+/g, " ");
 }
