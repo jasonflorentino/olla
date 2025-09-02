@@ -30,6 +30,16 @@ export interface Model {
   details: ModelDetails;
 }
 
+export interface RunningModel {
+  name: string;
+  model: string;
+  expires_at: string;
+  size: number;
+  size_vram: number;
+  digest: string;
+  details: ModelDetails;
+}
+
 interface ModelDetails {
   parent_model: string;
   format: string;

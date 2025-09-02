@@ -8,6 +8,7 @@ import {
   type ChatCompletionChunk,
   type ModelInformation,
   Role,
+  type RunningModel,
 } from "./types";
 
 const url_base = import.meta.env.DEV
@@ -18,10 +19,10 @@ if (!url_base) {
   throw new Error("Expected url_base to be defined");
 }
 
-const logger = new Logger("api");
+const _logger = new Logger("api");
 
 export async function listLocalModels() {
-  logger.debug("listLocalModels");
+  const logger = _logger.child("listLocalModels").debug("start");
   try {
     const response = await fetch(url_base + "/tags");
     const data = (await response.json()) as { models: Model[] };
@@ -42,7 +43,7 @@ export async function generateChatCompletion(params: {
   controller: AbortController;
   systemPrompt: string;
 }) {
-  logger.debug("generateChatCompletion", params);
+  const logger = _logger.child("generateChatCompletion").debug("start", params);
   const { model, messages, think, onContent, systemPrompt } = params;
 
   const hasSystemPrompt = messages.some((m) => m.role === Role.System);
@@ -123,7 +124,7 @@ export async function generateChatCompletion(params: {
 export async function showModelInformation(params: {
   model_name: string;
 }): Promise<ModelInformation | undefined> {
-  logger.debug("showModelInformation", params);
+  const logger = _logger.child("showModelInformation").debug("start", params);
   try {
     const response = await fetch(url_base + "/show", {
       method: "POST",
@@ -136,6 +137,70 @@ export async function showModelInformation(params: {
     });
     const data = (await response.json()) as ModelInformation;
     return data;
+  } catch (error) {
+    logger.error(error);
+    toast.error(String(error));
+    return undefined;
+  }
+}
+
+interface ListRunningModelsResponse {
+  models: RunningModel[];
+}
+
+export async function listRunningModels(): Promise<
+  ListRunningModelsResponse | undefined
+> {
+  const logger = _logger.child("listRunningModels").debug("start");
+  try {
+    const response = await fetch(url_base + "/ps");
+    const data = (await response.json()) as ListRunningModelsResponse;
+    return data;
+  } catch (error) {
+    logger.error(error);
+    toast.error(String(error));
+    return undefined;
+  }
+}
+
+export async function loadModel(params: { model_name: string }): Promise<void> {
+  const logger = _logger.child("loadModel").debug("start");
+  try {
+    const response = await fetch(url_base + "/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: params.model_name,
+      }),
+    });
+    const data = await response.json();
+    logger.debug("data", data);
+  } catch (error) {
+    logger.error(error);
+    toast.error(String(error));
+    return undefined;
+  }
+}
+
+export async function unloadModel(params: {
+  model_name: string;
+}): Promise<void> {
+  const logger = _logger.child("unloadModel").debug("start");
+  try {
+    const response = await fetch(url_base + "/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: params.model_name,
+        keep_alive: 0,
+      }),
+    });
+    const data = await response.json();
+    logger.debug("data", data);
   } catch (error) {
     logger.error(error);
     toast.error(String(error));
