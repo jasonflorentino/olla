@@ -5,8 +5,9 @@ import React, {
   useMemo,
   useState,
   useRef,
+  useCallback,
 } from "react";
-import { API } from "@/lib";
+import { API, Hooks } from "@/lib";
 import { type Model, type ModelInformation } from "@/lib/types";
 import { toast } from "sonner";
 import { Logger } from "./log";
@@ -46,7 +47,7 @@ export const useModelContext = () => useContext(ModelContext);
 
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [models, setModels] = useState<Model[]>([]);
-  const [model, setModel] = useState("");
+  const [model, _setModel] = useState("");
   const [think, setThink] = useState(false);
   const [prompt, setPrompt] = useState(Object.values(PROMPTS)[0]);
   const [modelInformation, setModelInformation] = useState<
@@ -55,12 +56,27 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
 
   const modelInfoTriesRef = useRef<Map<string, number>>(new Map());
 
+  const [storedModel, setStoredModel] = Hooks.useLocalStorage("model", "");
+
+  const setModel = useCallback(
+    (nextModel: string) => {
+      if (model) {
+        API.unloadModel({ model_name: model });
+      }
+      API.loadModel({ model_name: nextModel });
+      _setModel(nextModel);
+      setStoredModel(nextModel);
+    },
+    [model, _setModel, setStoredModel],
+  );
+
   useEffect(() => {
     const getModels = async () => {
       const modelList = await API.listLocalModels();
       if (modelList.length) {
         setModels(modelList);
-        setModel(modelList[0].name);
+        const hasStoredModel = !!modelList.find((m) => m.name === storedModel);
+        setModel(hasStoredModel ? storedModel : modelList[0].name);
       }
     };
     getModels();

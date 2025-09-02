@@ -164,7 +164,7 @@ export async function listRunningModels(): Promise<
 }
 
 export async function loadModel(params: { model_name: string }): Promise<void> {
-  const logger = _logger.child("loadModel").debug("start");
+  const logger = _logger.child("loadModel").debug("start", params);
   try {
     const response = await fetch(url_base + "/generate", {
       method: "POST",
@@ -187,7 +187,7 @@ export async function loadModel(params: { model_name: string }): Promise<void> {
 export async function unloadModel(params: {
   model_name: string;
 }): Promise<void> {
-  const logger = _logger.child("unloadModel").debug("start");
+  const logger = _logger.child("unloadModel").debug("start", params);
   try {
     const response = await fetch(url_base + "/generate", {
       method: "POST",

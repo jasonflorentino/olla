@@ -12,6 +12,12 @@ export class Logger {
     }
     return this;
   }
+  warn(...args: unknown[]) {
+    if (import.meta.env.DEV) {
+      console.warn(`[${this.name}] `, ...args);
+    }
+    return this;
+  }
   error(...args: unknown[]) {
     if (import.meta.env.DEV) {
       console.error(`[${this.name}] `, ...args);

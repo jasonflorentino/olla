@@ -29,7 +29,7 @@ export const PROMPTS = {
     Your goal is to leave the user with a sense of clarity, agency, and forward momentum.
     `,
   ),
-  Coder: clean(`
+  Developer: clean(`
     You are a senior coding assistant.
     Help the user write, debug, and understand code.
     Always provide correct, idiomatic, and production-ready solutions using modern best practices.
