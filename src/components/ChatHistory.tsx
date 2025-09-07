@@ -73,7 +73,7 @@ function Meta({ message }: { message: Message }) {
           {Util.formatNanoseconds(promptEvalDuration)})
         </p>
         <p>
-          Generted {evalCount} tokens ({Util.formatNanoseconds(evalDuration)})
+          Generated {evalCount} tokens ({Util.formatNanoseconds(evalDuration)})
         </p>
       </div>
     </div>
