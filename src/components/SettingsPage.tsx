@@ -1,13 +1,18 @@
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "./ui/label";
-import { Text } from "./ui";
+import { Text, Switch } from "./ui";
 import { ModelSelect } from "./ModelSelect";
 import { ModelThinkSelect } from "./ModelThinkSwitch";
 import { useModelContext } from "@/lib/model-context";
 import PeekCollapsible from "./PeekCollapsable";
+import { Input } from "./ui/input";
 
 export function SettingsPage() {
   const { prompt, prompts, setPrompt } = useModelContext();
+
+  const [seedEnabled, setSeedEnabled] = useState(false);
 
   return (
     <>
@@ -58,6 +63,40 @@ export function SettingsPage() {
             );
           })}
         </RadioGroup>
+      </section>
+
+      <section className="mt-7">
+        <Text.H3>Model Parameters</Text.H3>
+        <Text.Muted>
+          Parameters that can be set when the model is run.
+        </Text.Muted>
+
+        <div className="mt-5">
+          <div className="flex justify-between items-center">
+            <Text.H4 className={cn(!seedEnabled && "opacity-50")}>Seed</Text.H4>
+            <Switch
+              id="toggle-seed"
+              checked={seedEnabled}
+              onCheckedChange={setSeedEnabled}
+            />
+          </div>
+
+          <Text.Muted className={cn(!seedEnabled && "opacity-70", "my-2")}>
+            Sets the number seed to use for generation. Ususally this is a
+            random value. Setting this to a specific number will make the model
+            generate the same text for the same prompt. Can be any integer
+            between 1 and 4,294,967,295.
+          </Text.Muted>
+
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={0xffffffff}
+            disabled={!seedEnabled}
+            className={`font-mono mt-2`}
+          />
+        </div>
       </section>
     </>
   );
