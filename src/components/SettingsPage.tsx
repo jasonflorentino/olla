@@ -82,10 +82,9 @@ export function SettingsPage() {
           </div>
 
           <Text.Muted className={cn(!seedEnabled && "opacity-70", "my-2")}>
-            Sets the number seed to use for generation. Ususally this is a
-            random value. Setting this to a specific number will make the model
-            generate the same text for the same prompt. Can be any integer
-            between 1 and 4,294,967,295.
+            Sets a number seed to use for generation. Setting this to a specific
+            number will make the model generate the same text for the same
+            prompt. Can be any integer between 1 and 4,294,967,295.
           </Text.Muted>
 
           <Input
