@@ -22,22 +22,28 @@ type ModelContextState = {
   canThink: boolean;
   prompt: string;
   prompts: Record<string, string>;
+  seed: number | null;
+  setSeed: (seed: number | null) => void;
   setPrompt: (prompt: string) => void;
   modelInformation: Record<string, ModelInformation>;
 };
 
 const logger = new Logger("ModelContext");
 
+const noop = () => null;
+
 const initialState: ModelContextState = {
   models: [],
   model: "",
-  setModel: () => null,
+  setModel: noop,
   think: true,
-  setThink: () => null,
+  setThink: noop,
   canThink: false,
   prompt: "",
   prompts: {},
-  setPrompt: () => null,
+  seed: null,
+  setSeed: noop,
+  setPrompt: noop,
   modelInformation: {},
 };
 
@@ -53,6 +59,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [modelInformation, setModelInformation] = useState<
     ModelContextState["modelInformation"]
   >({});
+  const [seed, setSeed] = useState<number | null>(null);
 
   const modelInfoTriesRef = useRef<Map<string, number>>(new Map());
 
@@ -123,6 +130,8 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       modelInformation,
       prompt,
       prompts: PROMPTS,
+      seed,
+      setSeed,
       setPrompt,
       think,
       setThink,
@@ -130,7 +139,17 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
         (c) => c === "thinking",
       ),
     }),
-    [model, models, modelInformation, setModel, prompt, think, setThink],
+    [
+      model,
+      models,
+      modelInformation,
+      setModel,
+      prompt,
+      seed,
+      setSeed,
+      think,
+      setThink,
+    ],
   );
 
   useEffect(() => {
