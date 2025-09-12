@@ -8,6 +8,7 @@ import { ModelThinkSelect } from "./ModelThinkSwitch";
 import { useModelContext } from "@/lib/model-context";
 import PeekCollapsible from "./PeekCollapsable";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export function SettingsPage() {
   const { prompt, prompts, setPrompt } = useModelContext();
@@ -83,17 +84,22 @@ function Seed() {
   const setSeedEnabled = (enable: boolean) => {
     setSeed(enable ? 1 : null);
   };
-  const handleSeedChange = (e: SyntheticEvent) => {
+  const handleSeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
-    if (isNaN(value)) {
+    const num = Number(value);
+    if (isNaN(Number(num))) {
       return;
     }
-    const num = Number(value);
     if (num < 1 || num > SEED_MAX) {
       return;
     }
     setSeed(num);
+  };
+
+  const handleRandomClick = () => {
+    const randNum = Math.floor(Math.random() * SEED_MAX);
+    setSeed(randNum);
   };
 
   return (
@@ -113,16 +119,19 @@ function Seed() {
         Can be any integer between 1 and 4,294,967,295.
       </Text.Muted>
 
-      <Input
-        type="number"
-        inputMode="numeric"
-        min={0}
-        max={SEED_MAX}
-        value={seedEnabled ? seed : 0}
-        onChange={handleSeedChange}
-        disabled={!seedEnabled}
-        className={`font-mono mt-2`}
-      />
+      <div className="mt-2 flex gap-4 items-center">
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={SEED_MAX}
+          value={seedEnabled ? seed : 0}
+          onChange={handleSeedChange}
+          disabled={!seedEnabled}
+          className={`font-mono `}
+        />
+        <Button onClick={handleRandomClick}>Random</Button>
+      </div>
     </div>
   );
 }
