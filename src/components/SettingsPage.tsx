@@ -79,11 +79,8 @@ export function SettingsPage() {
 const SEED_MAX = 0xffffffff;
 
 function Seed() {
-  const { seed, setSeed } = useModelContext();
-  const seedEnabled = seed !== null;
-  const setSeedEnabled = (enable: boolean) => {
-    setSeed(enable ? 1 : null);
-  };
+  const { seed, setSeed, seedEnabled, setSeedEnabled } = useModelContext();
+
   const handleSeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
@@ -125,12 +122,14 @@ function Seed() {
           inputMode="numeric"
           min={0}
           max={SEED_MAX}
-          value={seedEnabled ? seed : 0}
+          value={seed}
           onChange={handleSeedChange}
           disabled={!seedEnabled}
           className={`font-mono `}
         />
-        <Button onClick={handleRandomClick}>Random</Button>
+        <Button disabled={!seedEnabled} onClick={handleRandomClick}>
+          Random
+        </Button>
       </div>
     </div>
   );

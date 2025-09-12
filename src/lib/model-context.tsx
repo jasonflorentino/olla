@@ -22,8 +22,10 @@ type ModelContextState = {
   canThink: boolean;
   prompt: string;
   prompts: Record<string, string>;
-  seed: number | null;
-  setSeed: (seed: number | null) => void;
+  seed: number;
+  seedEnabled: boolean;
+  setSeed: (seed: number) => void;
+  setSeedEnabled: (enabled: boolean) => void;
   setPrompt: (prompt: string) => void;
   modelInformation: Record<string, ModelInformation>;
 };
@@ -41,8 +43,10 @@ const initialState: ModelContextState = {
   canThink: false,
   prompt: "",
   prompts: {},
-  seed: null,
+  seed: 1,
+  seedEnabled: false,
   setSeed: noop,
+  setSeedEnabled: noop,
   setPrompt: noop,
   modelInformation: {},
 };
@@ -54,16 +58,16 @@ export const useModelContext = () => useContext(ModelContext);
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [models, setModels] = useState<Model[]>([]);
   const [model, _setModel] = useState("");
+  const [storedModel, setStoredModel] = Hooks.useLocalStorage("model", "");
   const [think, setThink] = useState(false);
   const [prompt, setPrompt] = useState(Object.values(PROMPTS)[0]);
   const [modelInformation, setModelInformation] = useState<
     ModelContextState["modelInformation"]
   >({});
-  const [seed, setSeed] = useState<number | null>(null);
-
   const modelInfoTriesRef = useRef<Map<string, number>>(new Map());
 
-  const [storedModel, setStoredModel] = Hooks.useLocalStorage("model", "");
+  const [seedEnabled, setSeedEnabled] = useState(false);
+  const [seed, setSeed] = Hooks.useLocalStorage<number>("seed", 1);
 
   const setModel = useCallback(
     (nextModel: string) => {
@@ -124,31 +128,35 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
 
   const value = useMemo(
     () => ({
+      canThink: modelInformation[model]?.capabilities.some(
+        (c) => c === "thinking",
+      ),
       model,
       models,
-      setModel,
       modelInformation,
       prompt,
       prompts: PROMPTS,
       seed,
-      setSeed,
+      seedEnabled,
+      setModel,
       setPrompt,
-      think,
+      setSeedEnabled,
       setThink,
-      canThink: modelInformation[model]?.capabilities.some(
-        (c) => c === "thinking",
-      ),
+      setSeed,
+      think,
     }),
     [
       model,
       models,
       modelInformation,
-      setModel,
       prompt,
       seed,
+      seedEnabled,
+      setModel,
       setSeed,
-      think,
+      setSeedEnabled,
       setThink,
+      think,
     ],
   );
 
