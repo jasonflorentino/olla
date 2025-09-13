@@ -37,6 +37,7 @@ export async function listLocalModels() {
 export async function generateChatCompletion(params: {
   model: string;
   messages: Message[];
+  seed: number | null;
   think: boolean;
   onContent: (content: ChatCompletionChunk) => void;
   onError?: (e: unknown) => void;
@@ -44,9 +45,21 @@ export async function generateChatCompletion(params: {
   systemPrompt: string;
 }) {
   const logger = _logger.child("generateChatCompletion").debug("start", params);
-  const { model, messages, think, onContent, systemPrompt } = params;
+  const {
+    model,
+    messages,
+    think,
+    onContent,
+    seed: seedFromApp,
+    systemPrompt,
+  } = params;
 
   const hasSystemPrompt = messages.some((m) => m.role === Role.System);
+  const seed = seedFromApp ? seedFromApp : undefined;
+
+  const options = {
+    seed,
+  };
 
   const prompt =
     systemPrompt && !hasSystemPrompt
@@ -65,6 +78,7 @@ export async function generateChatCompletion(params: {
       body: JSON.stringify({
         model,
         messages: prompt ? [prompt, ...messages] : messages,
+        options,
         think,
       }),
       signal: params.controller.signal,
