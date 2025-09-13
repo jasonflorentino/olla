@@ -6,6 +6,8 @@ Looked at a few linked on their README, but obviously it's much more fun making 
 
 —Jason (Aug 2025)
 
+![Screenshot of Olla app in dark mode in Safari browser](./demo/2025-09-13-home-dark.jpg)
+
 # Setup
 
 You will need
@@ -43,7 +45,7 @@ npm run dev
 # Deploying
 
 > [!Note]
-> This is geared towards the intel mac that runs ollama in my local network.
+> This is geared towards the intel mac that runs ollama in my local network. The chat app is a single-page React app that we'll serve as a static build from the same domain as the ollama server. We'll use nginx to handle either serving the build files or forwarding requests to ollama.
 
 ## One time setup
 
