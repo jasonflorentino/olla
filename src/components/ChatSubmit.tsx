@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export function ChatSubmit() {
   const { message, setMessage, messages, setMessages, updateResponse } =
     useChatContext();
-  const { model, think, prompt } = useModelContext();
+  const { model, think, prompt, seed, seedEnabled } = useModelContext();
   const [loading, setLoading] = useState(false);
   const abortControllerRef = useRef<AbortController>(null);
 
@@ -35,6 +35,7 @@ export function ChatSubmit() {
       model,
       think,
       controller,
+      seed: seedEnabled ? seed : null,
       systemPrompt: prompt,
       messages: newMessages,
       onContent: (c: ChatCompletionChunk) => {
@@ -53,6 +54,8 @@ export function ChatSubmit() {
     message,
     messages,
     model,
+    seed,
+    seedEnabled,
     prompt,
     setMessage,
     setMessages,

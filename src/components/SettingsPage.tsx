@@ -1,10 +1,14 @@
+import { useState, type ChangeEvent, type SyntheticEvent } from "react";
+import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "./ui/label";
-import { Text } from "./ui";
+import { Text, Switch } from "./ui";
 import { ModelSelect } from "./ModelSelect";
 import { ModelThinkSelect } from "./ModelThinkSwitch";
 import { useModelContext } from "@/lib/model-context";
 import PeekCollapsible from "./PeekCollapsable";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export function SettingsPage() {
   const { prompt, prompts, setPrompt } = useModelContext();
@@ -59,6 +63,74 @@ export function SettingsPage() {
           })}
         </RadioGroup>
       </section>
+
+      <section className="mt-7">
+        <Text.H3>Model Parameters</Text.H3>
+        <Text.Muted>
+          Parameters that can be set when the model is run.
+        </Text.Muted>
+
+        <Seed />
+      </section>
     </>
+  );
+}
+
+const SEED_MAX = 0xffffffff;
+
+function Seed() {
+  const { seed, setSeed, seedEnabled, setSeedEnabled } = useModelContext();
+
+  const handleSeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+
+    const num = Number(value);
+    if (isNaN(Number(num))) {
+      return;
+    }
+    if (num < 1 || num > SEED_MAX) {
+      return;
+    }
+    setSeed(num);
+  };
+
+  const handleRandomClick = () => {
+    const randNum = Math.floor(Math.random() * SEED_MAX);
+    setSeed(randNum);
+  };
+
+  return (
+    <div className="mt-5">
+      <div className="flex justify-between items-center">
+        <Text.H4 className={cn(!seedEnabled && "opacity-50")}>Seed</Text.H4>
+        <Switch
+          id="toggle-seed"
+          checked={seedEnabled}
+          onCheckedChange={setSeedEnabled}
+        />
+      </div>
+
+      <Text.Muted className={cn(!seedEnabled && "opacity-70", "my-2")}>
+        Sets a number seed to use for generation. Setting this to a specific
+        number will make the model generate the same text for the same prompt.
+        Can be any integer between 1 and 4,294,967,295.
+      </Text.Muted>
+
+      <div className="mt-2 flex gap-4 items-center">
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={SEED_MAX}
+          value={seed}
+          onChange={handleSeedChange}
+          disabled={!seedEnabled}
+          className={`font-mono `}
+        />
+        <Button disabled={!seedEnabled} onClick={handleRandomClick}>
+          Random
+        </Button>
+      </div>
+    </div>
   );
 }
