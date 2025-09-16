@@ -24,8 +24,7 @@ export function ChatSubmit() {
 
     const newMessages: Message[] = [
       ...messages,
-      //TODO: handle keying messages that are exactly the same content.
-      { role: "user", content: message, key: Util.djb2(message) },
+      { role: "user", content: message, key: Date.now() + Util.djb2(message) },
     ];
 
     setMessages(newMessages);
