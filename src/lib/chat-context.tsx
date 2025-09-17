@@ -14,6 +14,7 @@ type ChatContextState = {
   messages: Message[];
   setMessages: (messages: Message[]) => void;
   updateResponse: (chunk: ChatCompletionChunk) => void;
+  summary: string;
 };
 
 const initialState: ChatContextState = {
@@ -22,6 +23,7 @@ const initialState: ChatContextState = {
   messages: [],
   setMessages: () => null,
   updateResponse: () => null,
+  summary: "",
 };
 
 const ChatContext = createContext<ChatContextState>(initialState);
@@ -31,6 +33,7 @@ export const useChatContext = () => useContext(ChatContext);
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [summary, setSummary] = useState("");
 
   const updateResponse = useCallback(
     (c: ChatCompletionChunk) => {
@@ -64,11 +67,21 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       message,
       setMessage,
+      setSummary,
       messages,
       setMessages,
+      summary,
       updateResponse,
     }),
-    [message, setMessage, messages, setMessages, updateResponse],
+    [
+      message,
+      setMessage,
+      setSummary,
+      messages,
+      summary,
+      setMessages,
+      updateResponse,
+    ],
   );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

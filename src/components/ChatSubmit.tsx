@@ -9,8 +9,14 @@ import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ChatSubmit() {
-  const { message, setMessage, messages, setMessages, updateResponse } =
-    useChatContext();
+  const {
+    message,
+    setMessage,
+    messages,
+    setMessages,
+    summary,
+    updateResponse,
+  } = useChatContext();
   const { model, think, prompt, seed, seedEnabled } = useModelContext();
   const [loading, setLoading] = useState(false);
   const abortControllerRef = useRef<AbortController>(null);
@@ -35,6 +41,7 @@ export function ChatSubmit() {
       think,
       controller,
       seed: seedEnabled ? seed : null,
+      summary,
       systemPrompt: prompt,
       messages: newMessages,
       onContent: (c: ChatCompletionChunk) => {
@@ -55,6 +62,7 @@ export function ChatSubmit() {
     model,
     seed,
     seedEnabled,
+    summary,
     prompt,
     setMessage,
     setMessages,

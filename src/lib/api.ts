@@ -42,6 +42,7 @@ export async function generateChatCompletion(params: {
   onContent: (content: ChatCompletionChunk) => void;
   onError?: (e: unknown) => void;
   controller: AbortController;
+  summary: string;
   systemPrompt: string;
 }) {
   const logger = _logger.child("generateChatCompletion").debug("start", params);
@@ -54,8 +55,14 @@ export async function generateChatCompletion(params: {
     systemPrompt,
   } = params;
 
+  const chatSummaryEnabled = true;
+
   const hasSystemPrompt = messages.some((m) => m.role === Role.System);
   const seed = seedFromApp ? seedFromApp : undefined;
+
+  const messagesToSend = chatSummaryEnabled ? messages.slice(-1) : messages;
+
+  //TODO: inject summary to last user message
 
   const options = {
     seed,
@@ -133,6 +140,55 @@ export async function generateChatCompletion(params: {
     params.onError?.(err);
     return [];
   }
+}
+
+export async function generateChatSummary(params: {
+  model: string;
+  messages: Message[];
+  controller: AbortController;
+  onContent: (body: ChatCompletionChunk) => void;
+  onError: () => void;
+}) {
+  const logger = _logger.child("generateChatSummary").debug("start", params);
+  const { model, messages } = params;
+
+  const prompt = {
+    role: Role.System,
+    content:
+      "Summarize what was the user has said and your responses. Be extremely concise. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting",
+  };
+
+  try {
+    const response = await fetch(url_base + "/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          prompt,
+          ...messages,
+          { role: Role.User, content: prompt.content },
+        ],
+        think: false,
+        stream: false,
+      }),
+      signal: params.controller.signal,
+    });
+
+    if (!response || !response.body) {
+      throw new Error("No response");
+    }
+
+    const body = (await response.json()) as ChatCompletionChunk;
+    logger.debug(body);
+    params.onContent(body);
+  } catch (err) {
+    logger.error(err);
+    params.onError();
+  }
+  return;
 }
 
 export async function showModelInformation(params: {
