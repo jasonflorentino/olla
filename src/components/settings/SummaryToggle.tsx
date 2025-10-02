@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 import { Text, Switch } from "@/components//ui";
 import { useChatContext } from "@/lib/chat-context";
 

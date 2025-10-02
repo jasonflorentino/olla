@@ -6,7 +6,7 @@ import { type Message, type ChatCompletionChunk } from "@/lib/types";
 import { useChatContext } from "@/lib/chat-context";
 import { API, Util } from "@/lib";
 import { LoaderCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 
 export function ChatSubmit() {
   const {
