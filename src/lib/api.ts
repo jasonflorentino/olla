@@ -48,33 +48,30 @@ export async function generateChatCompletion(params: {
   const logger = _logger.child("generateChatCompletion").debug("start", params);
   const {
     model,
-    messages,
+    messages: messagesFromApp,
     think,
     onContent,
     seed: seedFromApp,
+    summary,
     systemPrompt,
   } = params;
 
+  const hasSystemPrompt = messagesFromApp.some((m) => m.role === Role.System);
+  const addSystemPrompt = systemPrompt && !hasSystemPrompt;
   const chatSummaryEnabled = true;
 
-  const hasSystemPrompt = messages.some((m) => m.role === Role.System);
   const seed = seedFromApp ? seedFromApp : undefined;
 
-  const messagesToSend = chatSummaryEnabled ? messages.slice(-1) : messages;
-
-  //TODO: inject summary to last user message
+  const messages = Util.compact([
+    addSystemPrompt ? Util.toMessage(Role.System, systemPrompt) : undefined,
+    ...(chatSummaryEnabled
+      ? [Util.toMessage(Role.Assistant, summary), ...messagesFromApp.slice(-1)]
+      : messagesFromApp),
+  ]);
 
   const options = {
     seed,
   };
-
-  const prompt =
-    systemPrompt && !hasSystemPrompt
-      ? {
-          role: Role.System,
-          content: systemPrompt,
-        }
-      : undefined;
 
   try {
     const response = await fetch(url_base + "/chat", {
@@ -84,7 +81,7 @@ export async function generateChatCompletion(params: {
       },
       body: JSON.stringify({
         model,
-        messages: prompt ? [prompt, ...messages] : messages,
+        messages,
         options,
         think,
       }),
@@ -155,7 +152,7 @@ export async function generateChatSummary(params: {
   const prompt = {
     role: Role.System,
     content:
-      "Summarize what was the user has said and your responses. Be extremely concise. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting",
+      "Summarize what the user has said and your responses. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting. Be extremely concise.",
   };
 
   try {

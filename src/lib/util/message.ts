@@ -1,4 +1,4 @@
-import type { MessageMeta, ChatCompletionChunk } from "../types";
+import type { Message, MessageMeta, ChatCompletionChunk, Role } from "../types";
 
 export function getMessageMeta(c: ChatCompletionChunk): MessageMeta {
   const {
@@ -7,4 +7,11 @@ export function getMessageMeta(c: ChatCompletionChunk): MessageMeta {
     ...rest
   } = c;
   return rest;
+}
+
+export function toMessage(role: Role, content: string): Message {
+  return {
+    role,
+    content,
+  };
 }

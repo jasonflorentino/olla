@@ -13,6 +13,7 @@ type ChatContextState = {
   setMessage: (message: string) => void;
   messages: Message[];
   setMessages: (messages: Message[]) => void;
+  setSummary: (summary: string) => void;
   updateResponse: (chunk: ChatCompletionChunk) => void;
   summary: string;
 };
@@ -22,6 +23,7 @@ const initialState: ChatContextState = {
   setMessage: () => null,
   messages: [],
   setMessages: () => null,
+  setSummary: () => null,
   updateResponse: () => null,
   summary: "",
 };
