@@ -13,9 +13,6 @@ export function SettingsPage() {
       <Text.H2>Settings</Text.H2>
 
       <section className="mt-7">
-        <Text.H3>Chat</Text.H3>
-        <Text.Muted>Settings for the chat</Text.Muted>
-
         <SummaryToggle />
       </section>
 
