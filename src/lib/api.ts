@@ -43,6 +43,7 @@ export async function generateChatCompletion(params: {
   onError?: (e: unknown) => void;
   controller: AbortController;
   summary: string;
+  summaryEnabled: boolean;
   systemPrompt: string;
 }) {
   const logger = _logger.child("generateChatCompletion").debug("start", params);
@@ -53,18 +54,18 @@ export async function generateChatCompletion(params: {
     onContent,
     seed: seedFromApp,
     summary,
+    summaryEnabled,
     systemPrompt,
   } = params;
 
   const hasSystemPrompt = messagesFromApp.some((m) => m.role === Role.System);
   const addSystemPrompt = systemPrompt && !hasSystemPrompt;
-  const chatSummaryEnabled = true;
 
   const seed = seedFromApp ? seedFromApp : undefined;
 
   const messages = Util.compact([
     addSystemPrompt ? Util.toMessage(Role.System, systemPrompt) : undefined,
-    ...(chatSummaryEnabled
+    ...(summaryEnabled
       ? [Util.toMessage(Role.Assistant, summary), ...messagesFromApp.slice(-1)]
       : messagesFromApp),
   ]);
