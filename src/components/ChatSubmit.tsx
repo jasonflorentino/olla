@@ -15,6 +15,7 @@ export function ChatSubmit() {
     messages,
     setMessages,
     summary,
+    summaryEnabled,
     updateResponse,
   } = useChatContext();
   const { model, think, prompt, seed, seedEnabled } = useModelContext();
@@ -42,6 +43,7 @@ export function ChatSubmit() {
       controller,
       seed: seedEnabled ? seed : null,
       summary,
+      summaryEnabled,
       systemPrompt: prompt,
       messages: newMessages,
       onContent: (c: ChatCompletionChunk) => {
@@ -63,6 +65,7 @@ export function ChatSubmit() {
     seed,
     seedEnabled,
     summary,
+    summaryEnabled,
     prompt,
     setMessage,
     setMessages,

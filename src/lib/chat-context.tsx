@@ -14,8 +14,10 @@ type ChatContextState = {
   messages: Message[];
   setMessages: (messages: Message[]) => void;
   setSummary: (summary: string) => void;
+  setSummaryEnabled: (enabled: boolean) => void;
   updateResponse: (chunk: ChatCompletionChunk) => void;
   summary: string;
+  summaryEnabled: boolean;
 };
 
 const initialState: ChatContextState = {
@@ -24,8 +26,10 @@ const initialState: ChatContextState = {
   messages: [],
   setMessages: () => null,
   setSummary: () => null,
+  setSummaryEnabled: () => null,
   updateResponse: () => null,
   summary: "",
+  summaryEnabled: true,
 };
 
 const ChatContext = createContext<ChatContextState>(initialState);
@@ -36,6 +40,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [summary, setSummary] = useState("");
+  const [summaryEnabled, setSummaryEnabled] = useState(true);
 
   const updateResponse = useCallback(
     (c: ChatCompletionChunk) => {
@@ -70,18 +75,22 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       message,
       setMessage,
       setSummary,
+      setSummaryEnabled,
       messages,
       setMessages,
       summary,
+      summaryEnabled,
       updateResponse,
     }),
     [
       message,
       setMessage,
       setSummary,
+      setSummaryEnabled,
       messages,
       summary,
       setMessages,
+      summaryEnabled,
       updateResponse,
     ],
   );

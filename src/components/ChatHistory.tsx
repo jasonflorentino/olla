@@ -11,6 +11,7 @@ export function ChatHistory() {
   const { model } = useModelContext();
   const abortControllerRef = useRef<AbortController>(null);
 
+  // Handles generating a chat summary once messages have finished updating
   useEffect(() => {
     if (!messages.length) {
       return;
@@ -36,7 +37,7 @@ export function ChatHistory() {
       abortControllerRef.current = null;
       clearTimeout(timer);
     };
-  }, [messages, model]);
+  }, [messages, model, setSummary]);
 
   return (
     <section className="lg:max-w-[800px] mx-auto w-full">
