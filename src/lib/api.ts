@@ -166,6 +166,7 @@ export async function generateChatSummary(params: {
         model,
         messages: [
           prompt,
+          // TODO: how to avoid this getting long. it's currently the whole chat. Do we include the previous summary?
           ...messages,
           { role: Role.User, content: prompt.content },
         ],

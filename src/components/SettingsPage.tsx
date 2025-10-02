@@ -1,18 +1,13 @@
-import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "./ui/label";
-import { Text, Switch } from "./ui";
-import { ModelSelect } from "./ModelSelect";
-import { ModelThinkSelect } from "./ModelThinkSwitch";
-import { useModelContext } from "@/lib/model-context";
-import PeekCollapsible from "./PeekCollapsable";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { useChatContext } from "@/lib/chat-context";
+import { Text } from "@/components/ui";
+import {
+  ModelSelect,
+  ModelThinkSelect,
+  Seed,
+  SummaryToggle,
+  SystemPromptSelector,
+} from "@/components/settings";
 
 export function SettingsPage() {
-  const { prompt, prompts, setPrompt } = useModelContext();
-
   return (
     <>
       <Text.H2>Settings</Text.H2>
@@ -42,33 +37,7 @@ export function SettingsPage() {
           This shapes behavior, tone, and constraints of the model's responses.
         </Text.Muted>
 
-        <RadioGroup
-          className="mt-4"
-          defaultValue={prompt}
-          onValueChange={setPrompt}
-        >
-          {Object.entries(prompts).map(([name, text]) => {
-            return (
-              <Label
-                key={name}
-                className="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-950"
-              >
-                <RadioGroupItem value={text} id={name} />
-                <PeekCollapsible
-                  peekLines={3}
-                  title={
-                    <p className="text-base leading-none font-medium">{name}</p>
-                  }
-                  checked={prompt === text}
-                >
-                  <div className="grid gap-1.5 font-normal">
-                    <p className="text-muted-foreground text-sm">{text}</p>
-                  </div>
-                </PeekCollapsible>
-              </Label>
-            );
-          })}
-        </RadioGroup>
+        <SystemPromptSelector />
       </section>
 
       <section className="mt-7">
@@ -80,89 +49,5 @@ export function SettingsPage() {
         <Seed />
       </section>
     </>
-  );
-}
-
-function SummaryToggle() {
-  const { summaryEnabled, setSummaryEnabled } = useChatContext();
-
-  return (
-    <div className="mt-5">
-      <div className="flex justify-between items-center">
-        <Text.H4 className={cn(!summaryEnabled && "opacity-50")}>
-          Context Compression
-        </Text.H4>
-        <Switch
-          id="toggle-seed"
-          checked={summaryEnabled}
-          onCheckedChange={setSummaryEnabled}
-        />
-      </div>
-
-      <Text.Muted className={cn(!summaryEnabled && "opacity-70", "my-2")}>
-        Instead of sending the full chat history in the context with each new
-        message, include a summary of the chat up to this point. Decreases
-        memory clarity but increases parsing and generation speed.
-      </Text.Muted>
-    </div>
-  );
-}
-
-const SEED_MAX = 0xffffffff;
-
-function Seed() {
-  const { seed, setSeed, seedEnabled, setSeedEnabled } = useModelContext();
-
-  const handleSeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    const num = Number(value);
-    if (isNaN(Number(num))) {
-      return;
-    }
-    if (num < 1 || num > SEED_MAX) {
-      return;
-    }
-    setSeed(num);
-  };
-
-  const handleRandomClick = () => {
-    const randNum = Math.floor(Math.random() * SEED_MAX);
-    setSeed(randNum);
-  };
-
-  return (
-    <div className="mt-5">
-      <div className="flex justify-between items-center">
-        <Text.H4 className={cn(!seedEnabled && "opacity-50")}>Seed</Text.H4>
-        <Switch
-          id="toggle-seed"
-          checked={seedEnabled}
-          onCheckedChange={setSeedEnabled}
-        />
-      </div>
-
-      <Text.Muted className={cn(!seedEnabled && "opacity-70", "my-2")}>
-        Sets a number seed to use for generation. Setting this to a specific
-        number will make the model generate the same text for the same prompt.
-        Can be any integer between 1 and 4,294,967,295.
-      </Text.Muted>
-
-      <div className="mt-2 flex gap-4 items-center">
-        <Input
-          type="number"
-          inputMode="numeric"
-          min={0}
-          max={SEED_MAX}
-          value={seed}
-          onChange={handleSeedChange}
-          disabled={!seedEnabled}
-          className={`font-mono `}
-        />
-        <Button disabled={!seedEnabled} onClick={handleRandomClick}>
-          Random
-        </Button>
-      </div>
-    </div>
   );
 }
