@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { type Message, type ChatCompletionChunk, Role } from "./types";
 import { djb2, getMessageMeta } from "./util";
+import * as Hooks from "@/lib/hooks";
 
 type ChatContextState = {
   message: string;
@@ -40,7 +41,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [summary, setSummary] = useState("");
-  const [summaryEnabled, setSummaryEnabled] = useState(true);
+  const [summaryEnabled, setSummaryEnabled] = Hooks.useLocalStorage(
+    "summaryEnabled",
+    true,
+  );
 
   const updateResponse = useCallback(
     (c: ChatCompletionChunk) => {

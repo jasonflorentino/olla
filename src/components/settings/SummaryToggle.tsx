@@ -8,9 +8,9 @@ export function SummaryToggle() {
   return (
     <div className="mt-5">
       <div className="flex justify-between items-center">
-        <Text.H4 className={cn(!summaryEnabled && "opacity-50")}>
-          Context Compression
-        </Text.H4>
+        <Text.H3 className={cn(!summaryEnabled && "opacity-50")}>
+          Chat Compression
+        </Text.H3>
         <Switch
           id="toggle-seed"
           checked={summaryEnabled}
