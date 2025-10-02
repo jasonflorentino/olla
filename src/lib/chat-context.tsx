@@ -7,13 +7,18 @@ import React, {
 } from "react";
 import { type Message, type ChatCompletionChunk, Role } from "./types";
 import { djb2, getMessageMeta } from "./util";
+import * as Hooks from "@/lib/hooks";
 
 type ChatContextState = {
   message: string;
   setMessage: (message: string) => void;
   messages: Message[];
   setMessages: (messages: Message[]) => void;
+  setSummary: (summary: string) => void;
+  setSummaryEnabled: (enabled: boolean) => void;
   updateResponse: (chunk: ChatCompletionChunk) => void;
+  summary: string;
+  summaryEnabled: boolean;
 };
 
 const initialState: ChatContextState = {
@@ -21,7 +26,11 @@ const initialState: ChatContextState = {
   setMessage: () => null,
   messages: [],
   setMessages: () => null,
+  setSummary: () => null,
+  setSummaryEnabled: () => null,
   updateResponse: () => null,
+  summary: "",
+  summaryEnabled: true,
 };
 
 const ChatContext = createContext<ChatContextState>(initialState);
@@ -31,6 +40,11 @@ export const useChatContext = () => useContext(ChatContext);
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [summary, setSummary] = useState("");
+  const [summaryEnabled, setSummaryEnabled] = Hooks.useLocalStorage(
+    "summaryEnabled",
+    true,
+  );
 
   const updateResponse = useCallback(
     (c: ChatCompletionChunk) => {
@@ -64,11 +78,25 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       message,
       setMessage,
+      setSummary,
+      setSummaryEnabled,
       messages,
       setMessages,
+      summary,
+      summaryEnabled,
       updateResponse,
     }),
-    [message, setMessage, messages, setMessages, updateResponse],
+    [
+      message,
+      setMessage,
+      setSummary,
+      setSummaryEnabled,
+      messages,
+      summary,
+      setMessages,
+      summaryEnabled,
+      updateResponse,
+    ],
   );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

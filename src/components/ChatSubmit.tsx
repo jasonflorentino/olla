@@ -6,11 +6,18 @@ import { type Message, type ChatCompletionChunk } from "@/lib/types";
 import { useChatContext } from "@/lib/chat-context";
 import { API, Util } from "@/lib";
 import { LoaderCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 
 export function ChatSubmit() {
-  const { message, setMessage, messages, setMessages, updateResponse } =
-    useChatContext();
+  const {
+    message,
+    setMessage,
+    messages,
+    setMessages,
+    summary,
+    summaryEnabled,
+    updateResponse,
+  } = useChatContext();
   const { model, think, prompt, seed, seedEnabled } = useModelContext();
   const [loading, setLoading] = useState(false);
   const abortControllerRef = useRef<AbortController>(null);
@@ -24,8 +31,7 @@ export function ChatSubmit() {
 
     const newMessages: Message[] = [
       ...messages,
-      //TODO: handle keying messages that are exactly the same content.
-      { role: "user", content: message, key: Util.djb2(message) },
+      { role: "user", content: message, key: Date.now() + Util.djb2(message) },
     ];
 
     setMessages(newMessages);
@@ -36,6 +42,8 @@ export function ChatSubmit() {
       think,
       controller,
       seed: seedEnabled ? seed : null,
+      summary,
+      summaryEnabled,
       systemPrompt: prompt,
       messages: newMessages,
       onContent: (c: ChatCompletionChunk) => {
@@ -56,6 +64,8 @@ export function ChatSubmit() {
     model,
     seed,
     seedEnabled,
+    summary,
+    summaryEnabled,
     prompt,
     setMessage,
     setMessages,

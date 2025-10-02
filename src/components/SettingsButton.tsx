@@ -3,7 +3,7 @@ import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePageContext } from "@/lib/page-context";
 import { Page } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 
 export function SettingsButton() {
   const { page, setPage, prevPage } = usePageContext();

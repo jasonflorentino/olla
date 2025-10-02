@@ -42,32 +42,37 @@ export async function generateChatCompletion(params: {
   onContent: (content: ChatCompletionChunk) => void;
   onError?: (e: unknown) => void;
   controller: AbortController;
+  summary: string;
+  summaryEnabled: boolean;
   systemPrompt: string;
 }) {
   const logger = _logger.child("generateChatCompletion").debug("start", params);
   const {
     model,
-    messages,
+    messages: messagesFromApp,
     think,
     onContent,
     seed: seedFromApp,
+    summary,
+    summaryEnabled,
     systemPrompt,
   } = params;
 
-  const hasSystemPrompt = messages.some((m) => m.role === Role.System);
+  const hasSystemPrompt = messagesFromApp.some((m) => m.role === Role.System);
+  const addSystemPrompt = systemPrompt && !hasSystemPrompt;
+
   const seed = seedFromApp ? seedFromApp : undefined;
+
+  const messages = Util.compact([
+    addSystemPrompt ? Util.toMessage(Role.System, systemPrompt) : undefined,
+    ...(summaryEnabled
+      ? [Util.toMessage(Role.Assistant, summary), ...messagesFromApp.slice(-1)]
+      : messagesFromApp),
+  ]);
 
   const options = {
     seed,
   };
-
-  const prompt =
-    systemPrompt && !hasSystemPrompt
-      ? {
-          role: Role.System,
-          content: systemPrompt,
-        }
-      : undefined;
 
   try {
     const response = await fetch(url_base + "/chat", {
@@ -77,7 +82,7 @@ export async function generateChatCompletion(params: {
       },
       body: JSON.stringify({
         model,
-        messages: prompt ? [prompt, ...messages] : messages,
+        messages,
         options,
         think,
       }),
@@ -133,6 +138,56 @@ export async function generateChatCompletion(params: {
     params.onError?.(err);
     return [];
   }
+}
+
+export async function generateChatSummary(params: {
+  model: string;
+  messages: Message[];
+  controller: AbortController;
+  onContent: (body: ChatCompletionChunk) => void;
+  onError: () => void;
+}) {
+  const logger = _logger.child("generateChatSummary").debug("start", params);
+  const { model, messages } = params;
+
+  const prompt = {
+    role: Role.System,
+    content:
+      "Summarize what the user has said and your responses. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting. Be extremely concise.",
+  };
+
+  try {
+    const response = await fetch(url_base + "/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          prompt,
+          // TODO: how to avoid this getting long. it's currently the whole chat. Do we include the previous summary?
+          ...messages,
+          { role: Role.User, content: prompt.content },
+        ],
+        think: false,
+        stream: false,
+      }),
+      signal: params.controller.signal,
+    });
+
+    if (!response || !response.body) {
+      throw new Error("No response");
+    }
+
+    const body = (await response.json()) as ChatCompletionChunk;
+    logger.debug(body);
+    params.onContent(body);
+  } catch (err) {
+    logger.error(err);
+    params.onError();
+  }
+  return;
 }
 
 export async function showModelInformation(params: {

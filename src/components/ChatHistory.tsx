@@ -1,12 +1,43 @@
 import { marked } from "marked";
 import { useEffect, useRef } from "react";
 import { useChatContext } from "@/lib/chat-context";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 import { Role, type Message } from "@/lib/types";
-import { Util } from "@/lib";
+import { API, Util } from "@/lib";
+import { useModelContext } from "@/lib/model-context";
 
 export function ChatHistory() {
-  const { messages } = useChatContext();
+  const { messages, setSummary } = useChatContext();
+  const { model } = useModelContext();
+  const abortControllerRef = useRef<AbortController>(null);
+
+  // Handles generating a chat summary once messages have finished updating
+  useEffect(() => {
+    if (!messages.length) {
+      return;
+    }
+    const generateSummary = async () => {
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+      API.generateChatSummary({
+        model,
+        messages,
+        controller,
+        onContent: (c) => {
+          setSummary(c.message.content);
+          abortControllerRef.current = null;
+        },
+        onError: () => {
+          abortControllerRef.current = null;
+        },
+      });
+    };
+    const timer = setTimeout(generateSummary, 2000);
+    return () => {
+      abortControllerRef.current = null;
+      clearTimeout(timer);
+    };
+  }, [messages, model, setSummary]);
 
   return (
     <section className="lg:max-w-[800px] mx-auto w-full">
