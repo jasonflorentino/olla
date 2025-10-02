@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 
 /**
  * PeekCollapsible
