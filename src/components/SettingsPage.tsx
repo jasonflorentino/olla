@@ -13,7 +13,13 @@ export function SettingsPage() {
       <Text.H2>Settings</Text.H2>
 
       <section className="mt-7">
-        <SummaryToggle />
+        <Text.H3>System Prompt</Text.H3>
+        <Text.Muted>
+          A guiding instruction that gets inserted before your first message.
+          This shapes behavior, tone, and constraints of the model's responses.
+        </Text.Muted>
+
+        <SystemPromptSelector />
       </section>
 
       <section className="mt-7">
@@ -28,13 +34,7 @@ export function SettingsPage() {
       </section>
 
       <section className="mt-7">
-        <Text.H3>System Prompt</Text.H3>
-        <Text.Muted>
-          A guiding instruction that gets inserted before your first message.
-          This shapes behavior, tone, and constraints of the model's responses.
-        </Text.Muted>
-
-        <SystemPromptSelector />
+        <SummaryToggle />
       </section>
 
       <section className="mt-7">
