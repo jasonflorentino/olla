@@ -2,12 +2,14 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
 import { type Message, type ChatCompletionChunk, Role } from "./types";
 import { djb2, getMessageMeta } from "./util";
 import * as Hooks from "@/lib/hooks";
+import { Logger } from "@/lib/log";
 
 type ChatContextState = {
   message: string;
@@ -20,6 +22,8 @@ type ChatContextState = {
   summary: string;
   summaryEnabled: boolean;
 };
+
+const logger = new Logger("ChatContext");
 
 const initialState: ChatContextState = {
   message: "",
@@ -45,6 +49,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     "summaryEnabled",
     true,
   );
+
+  useEffect(() => {
+    logger.debug("summary:", summary);
+  }, [summary]);
 
   const updateResponse = useCallback(
     (c: ChatCompletionChunk) => {
