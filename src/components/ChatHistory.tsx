@@ -7,22 +7,29 @@ import { API, Util } from "@/lib";
 import { useModelContext } from "@/lib/model-context";
 
 export function ChatHistory() {
-  const { messages, setSummary } = useChatContext();
+  const { messages, summary, setSummary } = useChatContext();
   const { model } = useModelContext();
   const abortControllerRef = useRef<AbortController>(null);
+  const chatSummaryMessagesLastLength = useRef(messages.length);
 
   // Handles generating a chat summary once messages have finished updating
   useEffect(() => {
-    if (!messages.length) {
-      return;
-    }
     const generateSummary = async () => {
+      const currLen = messages.length;
+      const lastLen = chatSummaryMessagesLastLength.current;
+      if (!currLen || currLen === lastLen) {
+        return;
+      } else {
+        chatSummaryMessagesLastLength.current = currLen;
+      }
+
       const controller = new AbortController();
       abortControllerRef.current = controller;
       API.generateChatSummary({
         model,
         messages,
         controller,
+        summary,
         onContent: (c) => {
           setSummary(c.message.content);
           abortControllerRef.current = null;
@@ -37,7 +44,7 @@ export function ChatHistory() {
       abortControllerRef.current = null;
       clearTimeout(timer);
     };
-  }, [messages, model, setSummary]);
+  }, [messages, model, summary, setSummary]);
 
   return (
     <section className="lg:max-w-[800px] mx-auto w-full">

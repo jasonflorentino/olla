@@ -70,6 +70,8 @@ export async function generateChatCompletion(params: {
       : messagesFromApp),
   ]);
 
+  logger.debug("Messages to send:", messages);
+
   const options = {
     seed,
   };
@@ -146,15 +148,26 @@ export async function generateChatSummary(params: {
   controller: AbortController;
   onContent: (body: ChatCompletionChunk) => void;
   onError: () => void;
+  summary: string;
 }) {
   const logger = _logger.child("generateChatSummary").debug("start", params);
-  const { model, messages } = params;
+  const { model, messages: chatMessages } = params;
+
+  const previousSummaryMsg = params.summary
+    ? ` Here is your summary of what was previously discussed; consider it when generating the new summary and carry over relevant details: "${params.summary}".`
+    : "";
 
   const prompt = {
-    role: Role.System,
-    content:
-      "Summarize what the user has said and your responses. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting. Be extremely concise.",
+    role: Role.User,
+    content: `The previous 2 messages are only the two most recent. Summarize what the user has said and your responses. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting. Be very concise. Do not include this request in the summary. ${previousSummaryMsg}`,
   };
+
+  const messages = [
+    ...chatMessages.slice(-2, chatMessages.length),
+    { role: Role.User, content: prompt.content },
+  ];
+
+  logger.debug("Messages to send:", messages);
 
   try {
     const response = await fetch(url_base + "/chat", {
@@ -164,12 +177,7 @@ export async function generateChatSummary(params: {
       },
       body: JSON.stringify({
         model,
-        messages: [
-          prompt,
-          // TODO: how to avoid this getting long. it's currently the whole chat. Do we include the previous summary?
-          ...messages,
-          { role: Role.User, content: prompt.content },
-        ],
+        messages,
         think: false,
         stream: false,
       }),

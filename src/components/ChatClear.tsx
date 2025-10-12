@@ -3,9 +3,10 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/util";
 
 export function ChatClear() {
-  const { messages, setMessages } = useChatContext();
+  const { messages, setMessages, setSummary } = useChatContext();
   const handleClick = () => {
     setMessages([]);
+    setSummary("");
   };
   const disabled = messages.length === 0;
   return (
