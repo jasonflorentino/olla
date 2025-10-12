@@ -60,7 +60,10 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [model, _setModel] = useState("");
   const [storedModel, setStoredModel] = Hooks.useLocalStorage("model", "");
   const [think, setThink] = useState(false);
-  const [prompt, setPrompt] = useState(Object.values(PROMPTS)[0]);
+  const [prompt, setPrompt] = Hooks.useLocalStorage(
+    "prompt",
+    Object.values(PROMPTS)[0],
+  );
   const [modelInformation, setModelInformation] = useState<
     ModelContextState["modelInformation"]
   >({});
