@@ -1,10 +1,10 @@
 import { marked } from "marked";
 import { useEffect, useRef } from "react";
-import { useChatContext } from "@/lib/chat-context";
+import { useChatContext } from "@/lib/context";
 import { cn } from "@/lib/util";
 import { Role, type Message } from "@/lib/types";
 import { API, Util } from "@/lib";
-import { useModelContext } from "@/lib/model-context";
+import { useModelContext } from "@/lib/context";
 
 export function ChatHistory() {
   const { messages, summary, setSummary } = useChatContext();

@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { useModelContext } from "@/lib/model-context";
+import { useModelContext } from "@/lib/context";
 import PeekCollapsible from "../PeekCollapsable";
 
 export function SystemPromptSelector() {

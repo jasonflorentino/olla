@@ -7,8 +7,8 @@ import React, {
   useState,
 } from "react";
 
-import { Page } from "./types";
-import { Logger } from "./log";
+import { Page } from "@/lib/types";
+import { Logger } from "@/lib/log";
 
 const logger = new Logger("PageContext");
 

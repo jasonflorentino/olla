@@ -10,8 +10,8 @@ import React, {
 import { API, Hooks } from "@/lib";
 import { type Model, type ModelInformation } from "@/lib/types";
 import { toast } from "sonner";
-import { Logger } from "./log";
-import { PROMPTS } from "./prompts";
+import { Logger } from "@/lib/log";
+import { PROMPTS } from "@/lib/prompts";
 
 type ModelContextState = {
   models: Model[];

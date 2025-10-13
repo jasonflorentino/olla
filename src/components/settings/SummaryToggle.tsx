@@ -1,6 +1,6 @@
 import { cn } from "@/lib/util";
 import { Text, Switch } from "@/components//ui";
-import { useChatContext } from "@/lib/chat-context";
+import { useChatContext } from "@/lib/context";
 
 export function SummaryToggle() {
   const { summaryEnabled, setSummaryEnabled } = useChatContext();

@@ -1,6 +1,6 @@
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { useChatContext } from "@/lib/chat-context";
+import { useChatContext } from "@/lib/context";
 
 export function ChatInput({ children }: { children: React.ReactNode }) {
   const { message, setMessage } = useChatContext();

@@ -1,5 +1,5 @@
-import { useChatContext } from "@/lib/chat-context";
-import { Button } from "./ui/button";
+import { useChatContext } from "@/lib/context";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/util";
 
 export function ChatClear() {

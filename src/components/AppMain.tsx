@@ -1,8 +1,5 @@
-import { ChatInput } from "./ChatInput";
-import { ChatSubmit } from "./ChatSubmit";
-import { ChatHistory } from "./ChatHistory";
-import { ChatClear } from "./ChatClear";
-import { usePageContext } from "@/lib/page-context";
+import { ChatSubmit, ChatHistory, ChatInput, ChatClear } from "./chat";
+import { usePageContext } from "@/lib/context";
 import { Page } from "@/lib/types";
 import { SettingsPage } from "./SettingsPage";
 

@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useModelContext } from "@/lib/model-context";
+import { useModelContext } from "@/lib/context";
 import { Util } from "@/lib";
 
 export function ModelSelect() {
