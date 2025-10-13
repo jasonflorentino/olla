@@ -45,12 +45,14 @@ npm run dev
 # Deploying
 
 > [!Note]
-> This is geared towards the intel mac that runs ollama in my local network. The chat app is a single-page React app that we'll serve as a static build from the same domain as the ollama server. We'll use nginx to handle either serving the build files or forwarding requests to ollama.
+> This is geared towards the intel mac that runs ollama in my local network. The chat app is a single-page React app that we'll serve as a static build from the same domain as the ollama server. We'll use nginx to handle either serving the build files for the chat client or forwarding requests to ollama.
 
 ## One time setup
 
-- Create a local DNS record for the machine.
+- Create a local DNS record for the server machine.
   - Set the domain name you use as the SERVER_NAME value in `.env`.
+
+On the server machine:
 - Install ollama.
   - This setup expects it be at `/usr/local/bin/ollama`
 - Install and run nginx.

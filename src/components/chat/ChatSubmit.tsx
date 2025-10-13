@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 
-import { useModelContext } from "@/lib/model-context";
-import { Button } from "./ui/button";
+import { useModelContext } from "@/lib/context";
+import { Button } from "@/components/ui";
 import { type Message, type ChatCompletionChunk } from "@/lib/types";
-import { useChatContext } from "@/lib/chat-context";
+import { useChatContext } from "@/lib/context";
 import { API, Util } from "@/lib";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/util";

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/util";
 import { Text, Switch } from "@/components/ui";
-import { useModelContext } from "@/lib/model-context";
+import { useModelContext } from "@/lib/context";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 

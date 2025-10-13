@@ -1,6 +1,6 @@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useModelContext } from "@/lib/model-context";
+import { useModelContext } from "@/lib/context";
 
 export function ModelThinkSelect() {
   const { think, setThink, canThink } = useModelContext();

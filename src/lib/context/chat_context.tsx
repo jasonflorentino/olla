@@ -6,8 +6,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { type Message, type ChatCompletionChunk, Role } from "./types";
-import { djb2, getMessageMeta } from "./util";
+import { type Message, type ChatCompletionChunk, Role } from "@/lib/types";
+import { djb2, getMessageMeta } from "@/lib/util";
 import * as Hooks from "@/lib/hooks";
 import { Logger } from "@/lib/log";
 
