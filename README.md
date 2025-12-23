@@ -80,3 +80,22 @@ npm run deploy
 ```
 
 You should now be able to see the app when you navigate to `http://$SERVER_NAME` while on your local network.
+
+## Updating Ollama
+
+- Download the latest verison.
+  ```bash
+  curl -vL -o Ollama.dmg https://ollama.com/download/Ollama.dmg
+  ```
+- Install the new version.
+  ```bash
+  # https://stackoverflow.com/questions/55869631/how-can-i-silently-install-a-macos-app-from-a-dmg-using-a-single-command
+  VOLUME=$(hdiutil attach -nobrowse 'Ollama.dmg' |
+      tail -n1 | cut -f3-; exit ${PIPESTATUS[0]}) &&
+  (rsync -a "$VOLUME"/*.app /Applications/; SYNCED=$?
+      (hdiutil detach -force -quiet "$VOLUME" || exit $?) && exit "$SYNCED")
+  ```
+- Restart the Ollama server
+```bash
+launchctl kickstart -k "user/$(id -u)/com.ollama.serve"
+```
