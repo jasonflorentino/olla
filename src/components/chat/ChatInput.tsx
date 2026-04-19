@@ -8,7 +8,7 @@ export function ChatInput({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative">
       <Textarea
-        className="min-h-32"
+        className="min-h-32 pb-16"
         placeholder="Type your message here."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
