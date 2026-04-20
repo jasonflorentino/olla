@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import pick from "lodash/pick";
 
 import { Logger } from "./log";
 import * as Util from "./util";
@@ -10,6 +11,8 @@ import {
   Role,
   type RunningModel,
 } from "./types";
+
+const { string } = Util;
 
 const url_base = import.meta.env.DEV
   ? import.meta.env.VITE_API_URL_DEV
@@ -65,8 +68,14 @@ export async function generateChatCompletion(params: {
 
   const messages = Util.compact([
     addSystemPrompt ? Util.toMessage(Role.System, systemPrompt) : undefined,
-    ...(summaryEnabled
-      ? [Util.toMessage(Role.Assistant, summary), ...messagesFromApp.slice(-1)]
+    ...(summaryEnabled && summary
+      ? [
+          Util.toMessage(
+            Role.System,
+            `The following is the most recent conversation state: ${summary}`,
+          ),
+          ...messagesFromApp.filter((m) => m.role !== Role.System).slice(-2),
+        ]
       : messagesFromApp),
   ]);
 
@@ -154,18 +163,25 @@ export async function generateChatSummary(params: {
   const { model, messages: chatMessages } = params;
 
   const previousSummaryMsg = params.summary
-    ? ` Here is your summary of what was previously discussed; consider it when generating the new summary and carry over relevant details: "${params.summary}".`
+    ? `Here is the state to update: "${params.summary}".`
     : "";
 
-  const prompt = {
-    role: Role.User,
-    content: `The previous 2 messages are only the two most recent. Summarize what the user has said and your responses. If specific things were mentioned, list them as examples of the broader topics. Respond with only text, no formatting. Be very concise. Do not include this request in the summary. ${previousSummaryMsg}`,
+  const recentTurns = `Here are the most recent turns: ${JSON.stringify(chatMessages.slice(-2).map((m) => pick(m, ["role", "content"])))}`;
+
+  const summaryPrompt = {
+    role: Role.System,
+    content: string.clean(`
+    You are maintaining a compact conversation state for future model calls.
+    Your task is to update the conversation state so it remains compact and relevant.
+    Respond only with the updated state.
+    Where relevant, include and update the session's task and goal, the user's preferences and constraints,
+    and chat's established facts, assumptions, uncertainties, decisions, open loops, pending acitons, names of important artifacts.
+    ${recentTurns}
+    ${previousSummaryMsg}
+    `),
   };
 
-  const messages = [
-    ...chatMessages.slice(-2, chatMessages.length),
-    { role: Role.User, content: prompt.content },
-  ];
+  const messages = [summaryPrompt];
 
   logger.debug("Messages to send:", messages);
 
