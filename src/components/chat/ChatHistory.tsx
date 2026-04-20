@@ -1,10 +1,12 @@
 import { marked } from "marked";
 import { useEffect, useRef } from "react";
+
 import { useChatContext } from "@/lib/context";
 import { cn } from "@/lib/util";
 import { Role, type Message } from "@/lib/types";
 import { API, Util } from "@/lib";
 import { useModelContext } from "@/lib/context";
+import { CopyButton } from "@/components/CopyButton";
 
 export function ChatHistory() {
   const { messages, summary, setSummary } = useChatContext();
@@ -15,6 +17,13 @@ export function ChatHistory() {
   // Handles generating a chat summary once messages have finished updating
   useEffect(() => {
     const generateSummary = async () => {
+      const lastMessage = messages[messages.length - 1];
+      if (!lastMessage) {
+        return;
+      }
+      if (lastMessage.role === Role.User) {
+        return;
+      }
       const currLen = messages.length;
       const lastLen = chatSummaryMessagesLastLength.current;
       if (!currLen || currLen === lastLen) {
@@ -52,28 +61,33 @@ export function ChatHistory() {
         const isUser = m.role === Role.User;
         const isAssistant = m.role === Role.Assistant;
 
+        const widthClass = isUser ? "w-10/12 sm:w-8/12 md:w-7/12 ml-auto" : "";
         return (
-          <div
-            key={m.key}
-            className={cn(
-              "mb-6 py-2 rounded-lg",
-              isUser
-                ? "w-10/12 sm:w-8/12 md:w-7/12 px-3 ml-auto bg-secondary border"
-                : "bg-background",
-            )}
-          >
-            <h4
+          <div className="mb-6">
+            <div
+              key={m.key}
               className={cn(
-                "text-base",
-                isUser ? "text-chart-3" : "text-chart-2",
+                "py-2 rounded-lg",
+                widthClass,
+                isUser ? "px-3 bg-secondary border" : "bg-background",
               )}
             >
-              {isUser
-                ? "you"
-                : Util.toModelDisplayName(m.meta?.model) || "model"}
-            </h4>
+              <h4
+                className={cn(
+                  "text-base",
+                  isUser ? "text-chart-3" : "text-chart-2",
+                )}
+              >
+                {isUser
+                  ? "you"
+                  : Util.toModelDisplayName(m.meta?.model) || "model"}
+              </h4>
 
-            <Content message={m} />
+              <Content message={m} />
+            </div>
+            <div className={cn(widthClass, "py-1")}>
+              <CopyButton content={m.content} />
+            </div>
             {isAssistant && <Meta message={m} />}
           </div>
         );

@@ -5,3 +5,4 @@ export * from "./parseConcatenatedJson";
 export * from "./message";
 export * from "./misc";
 export * from "./model";
+export * as string from "./string";
