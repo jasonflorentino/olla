@@ -1,5 +1,12 @@
+import { string } from "@/lib/util";
+
+const clean = string.clean;
+
 export const PROMPTS = {
-  Basic: clean(`
+  Simple: clean(`
+   You are a helpful assistant. Be concise, accurate, and explicit about uncertainty.
+    `),
+  Standard: clean(`
     You are a helpful, accurate, and reliable AI assistant.
     Give clear, concise, and practical answers tailored to the user.
     Ask brief clarifying questions if needed.
@@ -69,7 +76,3 @@ export const PROMPTS = {
     Keep responses concise and purposeful.
   `),
 };
-
-function clean(s: string): string {
-  return s.trim().replace(/\s+/g, " ");
-}

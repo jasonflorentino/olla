@@ -17,6 +17,13 @@ export function ChatHistory() {
   // Handles generating a chat summary once messages have finished updating
   useEffect(() => {
     const generateSummary = async () => {
+      const lastMessage = messages[messages.length - 1];
+      if (!lastMessage) {
+        return;
+      }
+      if (lastMessage.role === Role.User) {
+        return;
+      }
       const currLen = messages.length;
       const lastLen = chatSummaryMessagesLastLength.current;
       if (!currLen || currLen === lastLen) {
