@@ -1,3 +1,4 @@
+import { cn } from "@/lib/util";
 import { Text } from "@/components/ui";
 import {
   ModelSelect,
@@ -6,8 +7,10 @@ import {
   SummaryToggle,
   SystemPromptSelector,
 } from "@/components/settings";
+import { useModelContext } from "@/lib/context";
 
 export function SettingsPage() {
+  const { think, canThink } = useModelContext();
   return (
     <>
       <Text.H2>Settings</Text.H2>
@@ -24,13 +27,33 @@ export function SettingsPage() {
 
       <section className="mt-7">
         <Text.H3>Model</Text.H3>
-        <Text.Muted>
-          Which model to use, and whether to use Thinking before responding.
+        <Text.Muted className="mb-4">
+          Which model to use. Smaller models are fast but shallow or brittle.
+          Larger models are flexible and capable but slow. Small models often
+          give good-enough answers quickly. Large models are more likely to give
+          an answer that is thought through and better adapted to the situation.
         </Text.Muted>
-        <div className="flex gap-4 mt-4">
-          <ModelSelect />
+        <ModelSelect />
+      </section>
+
+      <section className="mt-7">
+        <div className="flex justify-between items-center">
+          <span className="flex gap-2 items-baseline">
+            <Text.H3 className={cn(!think && "opacity-50")}>Thinking</Text.H3>
+            {!canThink && (
+              <Text.Muted className={cn(!think && "opacity-50")}>
+                (The selected model doesn't support thinking)
+              </Text.Muted>
+            )}
+          </span>
           <ModelThinkSelect />
         </div>
+        <Text.Muted className={cn(!think && "opacity-70", "my-2")}>
+          The model does more internal back-and-forth before answering. This
+          often helps with logic, math, planning, and nuanced questions, but can
+          take longer. For quick or simple tasks, leaving it off is usually
+          fine.{" "}
+        </Text.Muted>
       </section>
 
       <section className="mt-7">

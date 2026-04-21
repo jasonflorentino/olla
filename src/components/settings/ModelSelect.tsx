@@ -19,7 +19,7 @@ export function ModelSelect() {
 
   return (
     <Select value={model} onValueChange={handleChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a model" />
       </SelectTrigger>
       <SelectContent>
