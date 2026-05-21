@@ -34,6 +34,8 @@ const logger = new Logger("ModelContext");
 
 const noop = () => null;
 
+const preferredModels = new Set(["gemma4:e2b", "gemma3:latest"]);
+
 const initialState: ModelContextState = {
   models: [],
   model: "",
@@ -90,10 +92,18 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       if (modelList.length) {
         setModels(modelList);
         const hasStoredModel = !!modelList.find((m) => m.name === storedModel);
+        const preferredModel = !!modelList.find((m) =>
+          preferredModels.has(m.name),
+        );
+
         let modelToSet = modelList[0].name;
+
         if (hasStoredModel) {
           modelToSet = storedModel;
+        } else if (preferredModel) {
+          modelToSet = preferredModel;
         }
+
         setModel(modelToSet);
       }
     };
