@@ -39,6 +39,7 @@ export const ChatMessage = ({ message }: { message: Message }) => {
             : Util.toModelDisplayName(message.meta?.model) || "model"}
         </h4>
 
+        <Thinking message={message} />
         <Content ref={contentRef} message={message} />
       </div>
       <div className={cn(widthClass, "py-1")}>
@@ -119,3 +120,23 @@ const Content = React.forwardRef<HTMLDivElement, { message: Message }>(
     );
   },
 );
+
+const Thinking = ({ message }) => {
+  if (!message.thinking) {
+    return null;
+  }
+  return (
+    <div className={cn("mb-2 opacity-75")}>
+      <h5
+        className={cn(
+          "text-xs font-medium tracking-wide text-muted-foreground",
+        )}
+      >
+        Thinking...
+      </h5>
+      <div className={cn("Content", "text-xs text-muted-foreground")}>
+        {message.thinking}
+      </div>
+    </div>
+  );
+};
