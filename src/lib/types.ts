@@ -53,6 +53,7 @@ export interface Message {
   key?: string;
   role: Role;
   content: string;
+  thinking?: string;
   meta?: MessageMeta;
 }
 

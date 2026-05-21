@@ -16,5 +16,11 @@ export function sortModels(models: Model[]): Model[] {
 
 // eg. "3.2B" -> 3.2
 function paramSizeToNum(p: string): number {
+  if (/B$/.test(p)) {
+    return Number(p.replace(/[^\d.]/g, "")) * 1_000_000_000;
+  }
+  if (/M$/.test(p)) {
+    return Number(p.replace(/[^\d.]/g, "")) * 1_000_000;
+  }
   return Number(p.replace(/[^\d.]/g, ""));
 }
