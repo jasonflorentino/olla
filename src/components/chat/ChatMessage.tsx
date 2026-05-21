@@ -121,7 +121,7 @@ const Content = React.forwardRef<HTMLDivElement, { message: Message }>(
   },
 );
 
-const Thinking = ({ message }) => {
+const Thinking = ({ message }: { message: Message }) => {
   if (!message.thinking) {
     return null;
   }
