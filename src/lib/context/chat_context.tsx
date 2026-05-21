@@ -58,6 +58,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     (c: ChatCompletionChunk) => {
       setMessages((msgs) => {
         const text = c.message.content;
+        const thinkingText = c.message.thinking;
         const lastResponse = msgs[msgs.length - 1];
         const meta = getMessageMeta(c);
         // keep replacing the assistant's most recent reponse
@@ -67,6 +68,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             {
               role: Role.Assistant,
               content: lastResponse.content + text,
+              thinking: (lastResponse.thinking ?? "") + (thinkingText ?? ""),
               key: djb2(lastResponse.content + text),
               meta,
             },
