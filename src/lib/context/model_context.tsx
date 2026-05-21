@@ -90,7 +90,11 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       if (modelList.length) {
         setModels(modelList);
         const hasStoredModel = !!modelList.find((m) => m.name === storedModel);
-        setModel(hasStoredModel ? storedModel : modelList[0].name);
+        let modelToSet = modelList[0].name;
+        if (hasStoredModel) {
+          modelToSet = storedModel;
+        }
+        setModel(modelToSet);
       }
     };
     getModels();
