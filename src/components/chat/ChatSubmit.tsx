@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 
-import { useModelContext } from "@/lib/context";
+import { TEMPERATURE_DEFAULT, useModelContext } from "@/lib/context";
 import { Button } from "@/components/ui";
 import { type Message, type ChatCompletionChunk } from "@/lib/types";
 import { useChatContext } from "@/lib/context";
@@ -55,7 +55,9 @@ export function ChatSubmit() {
       summaryEnabled,
       systemPrompt: prompt,
       messages: newMessages,
-      temperature: temperatureEnabled ? head(temperature) / 100 : null,
+      temperature: temperatureEnabled
+        ? getTemperature(temperature) / 100
+        : null,
       onContent: (c: ChatCompletionChunk) => {
         if (c.done) {
           setLoading(false);
@@ -119,4 +121,8 @@ export function ChatSubmit() {
       </div>
     </Button>
   );
+}
+
+function getTemperature(t: number[]): number {
+  return head(t) ?? TEMPERATURE_DEFAULT;
 }
