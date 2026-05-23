@@ -28,7 +28,7 @@ type ModelContextState = {
   setSeedEnabled: (enabled: boolean) => void;
   setPrompt: (prompt: string) => void;
   modelInformation: Record<string, ModelInformation>;
-  temperature: number;
+  temperature: number[];
   temperatureSet: (temperature: number[]) => void;
   temperatureEnabled: boolean;
   temperatureEnabledSet: (temperature: boolean) => void;
@@ -57,7 +57,7 @@ const initialState: ModelContextState = {
   setSeedEnabled: noop,
   setPrompt: noop,
   modelInformation: {},
-  temperature: TEMPERATURE_DEFAULT,
+  temperature: [TEMPERATURE_DEFAULT],
   temperatureSet: noop,
   temperatureEnabled: false,
   temperatureEnabledSet: noop,
