@@ -3,3 +3,4 @@ export * from "./ModelThinkSwitch";
 export * from "./Seed";
 export * from "./SummaryToggle";
 export * from "./SystemPromptSelector";
+export * from "./Temperature";
