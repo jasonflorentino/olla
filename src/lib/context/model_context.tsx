@@ -28,6 +28,10 @@ type ModelContextState = {
   setSeedEnabled: (enabled: boolean) => void;
   setPrompt: (prompt: string) => void;
   modelInformation: Record<string, ModelInformation>;
+  temperature: number;
+  temperatureSet: (temperature: number[]) => void;
+  temperatureEnabled: boolean;
+  temperatureEnabledSet: (temperature: boolean) => void;
 };
 
 const logger = new Logger("ModelContext");
@@ -35,6 +39,8 @@ const logger = new Logger("ModelContext");
 const noop = () => null;
 
 const preferredModels = new Set(["gemma4:e2b", "gemma3:latest"]);
+
+export const TEMPERATURE_DEFAULT = 80;
 
 const initialState: ModelContextState = {
   models: [],
@@ -51,6 +57,10 @@ const initialState: ModelContextState = {
   setSeedEnabled: noop,
   setPrompt: noop,
   modelInformation: {},
+  temperature: TEMPERATURE_DEFAULT,
+  temperatureSet: noop,
+  temperatureEnabled: false,
+  temperatureEnabledSet: noop,
 };
 
 const ModelContext = createContext<ModelContextState>(initialState);
@@ -73,6 +83,12 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [seedEnabled, setSeedEnabled] = useState(false);
   const [seed, setSeed] = Hooks.useLocalStorage<number>("seed", 1);
+
+  const [temperatureEnabled, temperatureEnabledSet] = useState(false);
+  const [temperature, temperatureSet] = Hooks.useLocalStorage<number[]>(
+    "temperature",
+    [TEMPERATURE_DEFAULT],
+  );
 
   const setModel = useCallback(
     (nextModel: string) => {
@@ -161,6 +177,10 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       setThink,
       setSeed,
       think,
+      temperature,
+      temperatureSet,
+      temperatureEnabled,
+      temperatureEnabledSet,
     }),
     [
       model,
@@ -174,6 +194,10 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
       setSeedEnabled,
       setThink,
       think,
+      temperature,
+      temperatureSet,
+      temperatureEnabled,
+      temperatureEnabledSet,
     ],
   );
 
