@@ -9,11 +9,20 @@ import {
   CircleUser,
   NotepadText,
   ScrollText,
+  Thermometer,
 } from "lucide-react";
 
 export function AppHeader() {
-  const { prompt, prompts, model, seed, seedEnabled, think } =
-    useModelContext();
+  const {
+    prompt,
+    prompts,
+    model,
+    seed,
+    seedEnabled,
+    think,
+    temperatureEnabled,
+    temperature,
+  } = useModelContext();
   const { summaryEnabled } = useChatContext();
 
   const promptName =
@@ -25,29 +34,35 @@ export function AppHeader() {
       <h1 className="scroll-m-20 md:border-b pb-1 text-3xl font-semibold tracking-tight first:mt-0">
         🐱Olla
       </h1>
-      <div className="flex flex-wrap justify-center gap-1 sm:gap-2 md:gap-3 mt-2">
-        <Badge variant="secondary">
+      <div className="flex flex-wrap justify-center gap-1 sm:gap-2 md:gap-3 mt-2 cursor-default">
+        <Badge variant="secondary" title="system prompt">
           <CircleUser />
           {promptName}
         </Badge>
-        <Badge variant="secondary">
+        <Badge variant="secondary" title="chat compression">
           {summaryEnabled ? <NotepadText /> : <ScrollText />}
           {summaryEnabled ? "Compress Chat" : "Raw Chat"}
         </Badge>
-        <Badge variant="outline">
+        <Badge variant="outline" title="model name">
           <Bot />
           {modelName}
         </Badge>
         {think && (
-          <Badge variant="outline">
+          <Badge variant="outline" title="thinking">
             <Brain />
             Thinking
           </Badge>
         )}
         {seedEnabled && (
-          <Badge variant="outline">
+          <Badge variant="outline" title="seed">
             <Bean />
             {seed}
+          </Badge>
+        )}
+        {temperatureEnabled && (
+          <Badge variant="outline" title="temperature">
+            <Thermometer />
+            {temperature}
           </Badge>
         )}
       </div>

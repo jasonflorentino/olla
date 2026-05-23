@@ -6,6 +6,7 @@ import {
   Seed,
   SummaryToggle,
   SystemPromptSelector,
+  Temperature,
 } from "@/components/settings";
 import { useModelContext } from "@/lib/context";
 
@@ -60,13 +61,14 @@ export function SettingsPage() {
         <SummaryToggle />
       </section>
 
-      <section className="mt-7">
+      <section className="my-7">
         <Text.H3>Model Parameters</Text.H3>
         <Text.Muted>
           Parameters that can be set when the model is run.
         </Text.Muted>
 
         <Seed />
+        <Temperature />
       </section>
     </>
   );
