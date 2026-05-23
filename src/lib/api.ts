@@ -48,6 +48,7 @@ export async function generateChatCompletion(params: {
   summary: string;
   summaryEnabled: boolean;
   systemPrompt: string;
+  temperature: number | null;
 }) {
   const logger = _logger.child("generateChatCompletion").debug("start", params);
   const {
@@ -59,12 +60,14 @@ export async function generateChatCompletion(params: {
     summary,
     summaryEnabled,
     systemPrompt,
+    temperature: temperatureFromApp,
   } = params;
 
   const hasSystemPrompt = messagesFromApp.some((m) => m.role === Role.System);
   const addSystemPrompt = systemPrompt && !hasSystemPrompt;
 
   const seed = seedFromApp ? seedFromApp : undefined;
+  const temperature = temperatureFromApp ? temperatureFromApp : undefined;
 
   const messages = Util.compact([
     addSystemPrompt ? Util.toMessage(Role.System, systemPrompt) : undefined,
@@ -77,12 +80,13 @@ export async function generateChatCompletion(params: {
           ...messagesFromApp.filter((m) => m.role !== Role.System).slice(-2),
         ]
       : messagesFromApp),
-  ]);
+  ]).map((m) => pick(m, ["role", "content"]));
 
   logger.debug("Messages to send:", messages);
 
   const options = {
     seed,
+    temperature,
   };
 
   try {

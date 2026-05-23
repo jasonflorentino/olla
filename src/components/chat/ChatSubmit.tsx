@@ -7,6 +7,7 @@ import { useChatContext } from "@/lib/context";
 import { API, Util } from "@/lib";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/util";
+import head from "lodash/head";
 
 export function ChatSubmit() {
   const {
@@ -18,7 +19,15 @@ export function ChatSubmit() {
     summaryEnabled,
     updateResponse,
   } = useChatContext();
-  const { model, think, prompt, seed, seedEnabled } = useModelContext();
+  const {
+    model,
+    think,
+    prompt,
+    seed,
+    seedEnabled,
+    temperature,
+    temperatureEnabled,
+  } = useModelContext();
   const [loading, setLoading] = useState(false);
   const abortControllerRef = useRef<AbortController>(null);
 
@@ -46,6 +55,7 @@ export function ChatSubmit() {
       summaryEnabled,
       systemPrompt: prompt,
       messages: newMessages,
+      temperature: temperatureEnabled ? head(temperature) / 100 : null,
       onContent: (c: ChatCompletionChunk) => {
         if (c.done) {
           setLoading(false);
