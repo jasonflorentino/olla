@@ -43,7 +43,7 @@ export function Temperature() {
         <Slider
           id="slider-temperature"
           disabled={!temperatureEnabled}
-          value={[temperature]}
+          value={temperature}
           onValueChange={temperatureSet}
           min={1}
           max={100}
